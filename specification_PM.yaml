@@ -1,0 +1,1326 @@
+openapi: 3.0.0
+info:
+  title: Coworking Space Management API
+  version: 1.0.0
+  description: API for managing coworking space resources and services.
+  contact:
+    email: support@coworkingspace.com
+
+servers:
+  - url: http://localhost:8080
+    description: Local development server
+
+components:
+  schemas:
+    User:
+      type: object
+      properties:
+        userId:
+          type: string
+          format: uuid
+          description: Unique identifier of the user.
+          readOnly: true
+        firstName:
+          type: string
+          description: User's first name.
+          maxLength: 50
+        lastName:
+          type: string
+          description: User's last name.
+          maxLength: 50
+        email:
+          type: string
+          description: User's email address.
+          format: email
+        phoneNumber:
+          type: string
+          description: User's phone number.
+          maxLength: 20
+        role:
+          type: string
+          enum: [USER, ADMIN]
+          description: User's role.
+      required:
+        - firstName
+        - lastName
+        - email
+        - phoneNumber
+        - role
+
+    Workspace:
+      type: object
+      properties:
+        workspaceId:
+          type: string
+          format: uuid
+          description: Unique identifier of the workspace.
+          readOnly: true
+        name:
+          type: string
+          description: Workspace name.
+          maxLength: 100
+        description:
+          type: string
+          description: Workspace description.
+        pricePerHour:
+          type: number
+          format: float
+          description: Price per hour of the workspace.
+        status:
+          type: string
+          enum: [AVAILABLE, OCCUPIED, UNDER_MAINTENANCE]
+          description: Workspace status.
+      required:
+        - name
+        - pricePerHour
+        - status
+
+    Booking:
+      type: object
+      properties:
+        bookingId:
+          type: string
+          format: uuid
+          description: Unique identifier of the booking.
+          readOnly: true
+        workspaceId:
+          type: string
+          format: uuid
+          description: ID of the booked workspace.
+        userId:
+          type: string
+          format: uuid
+          description: ID of the user who booked the workspace.
+        startTime:
+          type: string
+          format: date-time
+          description: Booking start time.
+        endTime:
+          type: string
+          format: date-time
+          description: Booking end time.
+        totalPrice:
+          type: number
+          format: float
+          description: Total price of the booking.
+          readOnly: true
+        status:
+          type: string
+          enum: [PENDING, CONFIRMED, CANCELED, COMPLETED]
+          description: Booking status.
+      required:
+        - workspaceId
+        - userId
+        - startTime
+        - endTime
+
+    GuestAccess:
+      type: object
+      properties:
+        guestAccessId:
+          type: string
+          format: uuid
+          description: Unique identifier of the guest access.
+          readOnly: true
+        userId:
+          type: string
+          format: uuid
+          description: ID of the user requesting guest access.
+        guestName:
+          type: string
+          description: Guest's name.
+          maxLength: 100
+        guestEmail:
+          type: string
+          description: Guest's email.
+          format: email
+        accessStartTime:
+          type: string
+          format: date-time
+          description: Access start time.
+        accessEndTime:
+          type: string
+          format: date-time
+          description: Access end time.
+        status:
+          type: string
+          enum: [PENDING, APPROVED, REJECTED, ACTIVE, EXPIRED]
+          description: Guest access status.
+      required:
+        - userId
+        - guestName
+        - guestEmail
+        - accessStartTime
+        - accessEndTime
+
+    ParkingSpace:
+      type: object
+      properties:
+        parkingSpaceId:
+          type: string
+          format: uuid
+          description: Unique identifier of the parking space.
+          readOnly: true
+        spaceNumber:
+          type: string
+          description: Parking space number.
+          maxLength: 10
+        status:
+          type: string
+          enum: [AVAILABLE, OCCUPIED, RESERVED]
+          description: Parking space status.
+        pricePerDay:
+          type: number
+          format: float
+          description: Price per day for the parking space.
+      required:
+        - spaceNumber
+        - pricePerDay
+        - status
+
+    SupplyOrder:
+      type: object
+      properties:
+        orderId:
+          type: string
+          format: uuid
+          description: Unique identifier of the supply order.
+          readOnly: true
+        userId:
+          type: string
+          format: uuid
+          description: ID of the user placing the order.
+        items:
+          type: array
+          items:
+            type: string
+          description: List of ordered items.
+        orderDate:
+          type: string
+          format: date-time
+          description: Order date and time.
+        status:
+          type: string
+          enum: [PENDING, PROCESSING, SHIPPED, DELIVERED, CANCELED]
+          description: Order status.
+      required:
+        - userId
+        - items
+
+    SupportTicket:
+      type: object
+      properties:
+        ticketId:
+          type: string
+          format: uuid
+          description: Unique identifier of the support ticket.
+          readOnly: true
+        userId:
+          type: string
+          format: uuid
+          description: ID of the user submitting the ticket.
+        subject:
+          type: string
+          description: Ticket subject.
+          maxLength: 200
+        description:
+          type: string
+          description: Ticket description.
+        priority:
+          type: string
+          enum: [LOW, MEDIUM, HIGH]
+          description: Ticket priority.
+        status:
+          type: string
+          enum: [OPEN, IN_PROGRESS, RESOLVED, CLOSED]
+          description: Ticket status.
+        creationDate:
+          type: string
+          format: date-time
+          description: Ticket creation date and time.
+      required:
+        - userId
+        - subject
+        - description
+        - priority
+
+    Error:
+      type: object
+      properties:
+        timestamp:
+          type: string
+          format: date-time
+          description: Timestamp of the error.
+        status:
+          type: integer
+          description: HTTP status code.
+        error:
+          type: string
+          description: Error message.
+        path:
+          type: string
+          description: Request path.
+
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+security:
+  - bearerAuth: []
+
+paths:
+  /users:
+    get:
+      summary: Get all users.
+      tags: [Users]
+      responses:
+        '200':
+          description: Successful operation.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/User'
+        '500':
+          description: Internal server error.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    post:
+      summary: Create a new user.
+      tags: [Users]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+      responses:
+        '201':
+          description: User created successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '400':
+          description: Bad request (validation errors).
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Internal server error.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /users/{userId}:
+    get:
+      summary: Get a user by ID.
+      tags: [Users]
+      parameters:
+        - in: path
+          name: userId
+          schema:
+            type: string
+            format: uuid
+          required: true
+          description: ID of the user to retrieve.
+      responses:
+        '200':
+          description: Successful operation.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '404':
+          description: User not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Internal server error.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    put:
+      summary: Update a user by ID.
+      tags: [Users]
+      parameters:
+        - in: path
+          name: userId
+          schema:
+            type: string
+            format: uuid
+          required: true
+          description: ID of the user to update.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+      responses:
+        '200':
+          description: User updated successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+        '400':
+          description: Bad request (validation errors).
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: User not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Internal server error.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+    delete:
+      summary: Delete a user by ID.
+      tags: [Users]
+      parameters:
+        - in: path
+          name: userId
+          schema:
+            type: string
+            format: uuid
+          required: true
+          description: ID of the user to delete.
+      responses:
+        '204':
+          description: User deleted successfully.
+        '404':
+          description: User not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Internal server error.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /workspaces:
+    get:
+      summary: Get all workspaces.
+      tags: [Workspaces]
+      responses:
+        '200':
+          description: Successful operation.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Workspace'
+        '500':
+          description: Internal server error.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+    post:
+      summary: Create a new workspace.
+      tags: [Workspaces]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Workspace'
+      responses:
+        '201':
+          description: Workspace created successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Workspace'
+        '400':
+          description: Bad request (validation errors).
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Internal server error.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /workspaces/{workspaceId}:
+    get:
+      summary: Get a workspace by ID.
+      tags: [Workspaces]
+      parameters:
+        - in: path
+          name: workspaceId
+          schema:
+            type: string
+            format: uuid
+          required: true
+          description: ID of the workspace to retrieve.
+      responses:
+        '200':
+          description: Successful operation.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Workspace'
+        '404':
+          description: Workspace not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Internal server error.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+    put:
+      summary: Update a workspace by ID.
+      tags: [Workspaces]
+      parameters:
+        - in: path
+          name: workspaceId
+          schema:
+            type: string
+            format: uuid
+          required: true
+          description: ID of the workspace to update.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Workspace'
+      responses:
+        '200':
+          description: Workspace updated successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Workspace'
+        '400':
+          description: Bad request (validation errors).
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Workspace not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Internal server error.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+    delete:
+      summary: Delete a workspace by ID.
+      tags: [Workspaces]
+      parameters:
+        - in: path
+          name: workspaceId
+          schema:
+            type: string
+            format: uuid
+          required: true
+          description: ID of the workspace to delete.
+      responses:
+        '204':
+          description: Workspace deleted successfully.
+        '404':
+          description: Workspace not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Internal server error.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /bookings:
+    get:
+      summary: Get all bookings.
+      tags: [Bookings]
+      responses:
+        '200':
+          description: Successful operation.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Booking'
+        '500':
+          description: Internal server error.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+    post:
+      summary: Create a new booking.
+      tags: [Bookings]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Booking'
+      responses:
+        '201':
+          description: Booking created successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Booking'
+        '400':
+          description: Bad request (validation errors).
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Internal server error.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /bookings/{bookingId}:
+    get:
+      summary: Get a booking by ID.
+      tags: [Bookings]
+      parameters:
+        - in: path
+          name: bookingId
+          schema:
+            type: string
+            format: uuid
+          required: true
+          description: ID of the booking to retrieve.
+      responses:
+        '200':
+          description: Successful operation.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Booking'
+        '404':
+          description: Booking not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Internal server error.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+    put:
+      summary: Update a booking by ID.
+      tags: [Bookings]
+      parameters:
+        - in: path
+          name: bookingId
+          schema:
+            type: string
+            format: uuid
+          required: true
+          description: ID of the booking to update.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Booking'
+      responses:
+        '200':
+          description: Booking updated successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Booking'
+        '400':
+          description: Bad request (validation errors).
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Booking not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Internal server error.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+    delete:
+      summary: Delete a booking by ID.
+      tags: [Bookings]
+      parameters:
+        - in: path
+          name: bookingId
+          schema:
+            type: string
+            format: uuid
+          required: true
+          description: ID of the booking to delete.
+      responses:
+        '204':
+          description: Booking deleted successfully.
+        '404':
+          description: Booking not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Internal server error.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /guest-access:
+    get:
+      summary: Get all guest access requests.
+      tags: [GuestAccess]
+      responses:
+        '200':
+          description: Successful operation.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/GuestAccess'
+        '500':
+          description: Internal server error.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+    post:
+      summary: Create a new guest access request.
+      tags: [GuestAccess]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GuestAccess'
+      responses:
+        '201':
+          description: Guest access request created successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GuestAccess'
+        '400':
+          description: Bad request (validation errors).
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Internal server error.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /guest-access/{guestAccessId}:
+    get:
+      summary: Get a guest access request by ID.
+      tags: [GuestAccess]
+      parameters:
+        - in: path
+          name: guestAccessId
+          schema:
+            type: string
+            format: uuid
+          required: true
+          description: ID of the guest access request to retrieve.
+      responses:
+        '200':
+          description: Successful operation.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GuestAccess'
+        '404':
+          description: Guest access request not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Internal server error.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+    put:
+      summary: Update a guest access request by ID.
+      tags: [GuestAccess]
+      parameters:
+        - in: path
+          name: guestAccessId
+          schema:
+            type: string
+            format: uuid
+          required: true
+          description: ID of the guest access request to update.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GuestAccess'
+      responses:
+        '200':
+          description: Guest access request updated successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GuestAccess'
+        '400':
+          description: Bad request (validation errors).
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Guest access request not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Internal server error.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+    delete:
+      summary: Delete a guest access request by ID.
+      tags: [GuestAccess]
+      parameters:
+        - in: path
+          name: guestAccessId
+          schema:
+            type: string
+            format: uuid
+          required: true
+          description: ID of the guest access request to delete.
+      responses:
+        '204':
+          description: Guest access request deleted successfully.
+        '404':
+          description: Guest access request not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Internal server error.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /parking-spaces:
+    get:
+      summary: Get all parking spaces.
+      tags: [ParkingSpaces]
+      responses:
+        '200':
+          description: Successful operation.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ParkingSpace'
+        '500':
+          description: Internal server error.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+    post:
+      summary: Create a new parking space.
+      tags: [ParkingSpaces]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ParkingSpace'
+      responses:
+        '201':
+          description: Parking space created successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ParkingSpace'
+        '400':
+          description: Bad request (validation errors).
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Internal server error.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /parking-spaces/{parkingSpaceId}:
+    get:
+      summary: Get a parking space by ID.
+      tags: [ParkingSpaces]
+      parameters:
+        - in: path
+          name: parkingSpaceId
+          schema:
+            type: string
+            format: uuid
+          required: true
+          description: ID of the parking space to retrieve.
+      responses:
+        '200':
+          description: Successful operation.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ParkingSpace'
+        '404':
+          description: Parking space not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Internal server error.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+    put:
+      summary: Update a parking space by ID.
+      tags: [ParkingSpaces]
+      parameters:
+        - in: path
+          name: parkingSpaceId
+          schema:
+            type: string
+            format: uuid
+          required: true
+          description: ID of the parking space to update.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ParkingSpace'
+      responses:
+        '200':
+          description: Parking space updated successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ParkingSpace'
+        '400':
+          description: Bad request (validation errors).
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Parking space not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Internal server error.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+    delete:
+      summary: Delete a parking space by ID.
+      tags: [ParkingSpaces]
+      parameters:
+        - in: path
+          name: parkingSpaceId
+          schema:
+            type: string
+            format: uuid
+          required: true
+          description: ID of the parking space to delete.
+      responses:
+        '204':
+          description: Parking space deleted successfully.
+        '404':
+          description: Parking space not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Internal server error.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /supplies:
+    get:
+      summary: Get all supply orders.
+      tags: [Supplies]
+      responses:
+        '200':
+          description: Successful operation.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/SupplyOrder'
+        '500':
+          description: Internal server error.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+    post:
+      summary: Create a new supply order.
+      tags: [Supplies]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SupplyOrder'
+      responses:
+        '201':
+          description: Supply order created successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SupplyOrder'
+        '400':
+          description: Bad request (validation errors).
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Internal server error.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /supplies/{orderId}:
+    get:
+      summary: Get a supply order by ID.
+      tags: [Supplies]
+      parameters:
+        - in: path
+          name: orderId
+          schema:
+            type: string
+            format: uuid
+          required: true
+          description: ID of the supply order to retrieve.
+      responses:
+        '200':
+          description: Successful operation.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SupplyOrder'
+        '404':
+          description: Supply order not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Internal server error.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+    put:
+      summary: Update a supply order by ID.
+      tags: [Supplies]
+      parameters:
+        - in: path
+          name: orderId
+          schema:
+            type: string
+            format: uuid
+          required: true
+          description: ID of the supply order to update.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SupplyOrder'
+      responses:
+        '200':
+          description: Supply order updated successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SupplyOrder'
+        '400':
+          description: Bad request (validation errors).
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Supply order not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Internal server error.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+    delete:
+      summary: Delete a supply order by ID.
+      tags: [Supplies]
+      parameters:
+        - in: path
+          name: orderId
+          schema:
+            type: string
+            format: uuid
+          required: true
+          description: ID of the supply order to delete.
+      responses:
+        '204':
+          description: Supply order deleted successfully.
+        '404':
+          description: Supply order not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Internal server error.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /support-tickets:
+    get:
+      summary: Get all support tickets.
+      tags: [SupportTickets]
+      responses:
+        '200':
+          description: Successful operation.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/SupportTicket'
+        '500':
+          description: Internal server error.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+    post:
+      summary: Create a new support ticket.
+      tags: [SupportTickets]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SupportTicket'
+      responses:
+        '201':
+          description: Support ticket created successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SupportTicket'
+        '400':
+          description: Bad request (validation errors).
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Internal server error.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /support-tickets/{ticketId}:
+    get:
+      summary: Get a support ticket by ID.
+      tags: [SupportTickets]
+      parameters:
+        - in: path
+          name: ticketId
+          schema:
+            type: string
+            format: uuid
+          required: true
+          description: ID of the support ticket to retrieve.
+      responses:
+        '200':
+          description: Successful operation.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SupportTicket'
+        '404':
+          description: Support ticket not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Internal server error.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+    put:
+      summary: Update a support ticket by ID.
+      tags: [SupportTickets]
+      parameters:
+        - in: path
+          name: ticketId
+          schema:
+            type: string
+            format: uuid
+          required: true
+          description: ID of the support ticket to update.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SupportTicket'
+      responses:
+        '200':
+          description: Support ticket updated successfully.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SupportTicket'
+        '400':
+          description: Bad request (validation errors).
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '404':
+          description: Support ticket not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Internal server error.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+    delete:
+      summary: Delete a support ticket by ID.
+      tags: [SupportTickets]
+      parameters:
+        - in: path
+          name: ticketId
+          schema:
+            type: string
+            format: uuid
+          required: true
+          description: ID of the support ticket to delete.
+      responses:
+        '204':
+          description: Support ticket deleted successfully.
+        '404':
+          description: Support ticket not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '500':
+          description: Internal server error.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
