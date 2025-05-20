@@ -54,7 +54,7 @@ public class ParkingSpaceController {
 
     @Operation(summary = "Создать новое парковочное место")
     @ApiResponses(value = {
-        @ApiResponse(responseCode = "200", description = "Парковочное место успешно создано",
+        @ApiResponse(responseCode = "201", description = "Парковочное место успешно создано",
             content = @Content(schema = @Schema(implementation = ParkingSpace.class))),
         @ApiResponse(responseCode = "400", description = "Некорректные данные"),
         @ApiResponse(responseCode = "401", description = "Неавторизованный доступ"),
@@ -64,7 +64,7 @@ public class ParkingSpaceController {
     public ResponseEntity<ParkingSpace> createParkingSpace(
             @Parameter(description = "Данные парковочного места", required = true)
             @RequestBody ParkingSpace parkingSpace) {
-        return ResponseEntity.ok(parkingSpaceService.createParkingSpace(parkingSpace));
+        return ResponseEntity.status(201).body(parkingSpaceService.createParkingSpace(parkingSpace));
     }
 
     @Operation(summary = "Обновить парковочное место")

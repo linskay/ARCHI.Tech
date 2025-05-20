@@ -1,44 +1,49 @@
 package com.coworking.service.impl;
 
+import com.coworking.exception.ParkingSpaceNotFoundException;
 import com.coworking.model.ParkingSpace;
+import com.coworking.repository.ParkingSpaceRepository;
 import com.coworking.service.ParkingSpaceService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import java.util.List;
 import java.util.UUID;
 
 @Service
+@RequiredArgsConstructor
 public class ParkingSpaceServiceImpl implements ParkingSpaceService {
+    private final ParkingSpaceRepository parkingSpaceRepository;
 
     @Override
     public List<ParkingSpace> getAllParkingSpaces() {
-        // TODO: Реализовать получение всех парковочных мест
-        return List.of();
+        return parkingSpaceRepository.findAll();
     }
 
     @Override
     public ParkingSpace getParkingSpaceById(UUID parkingSpaceId) {
-        // TODO: Реализовать получение парковочного места по ID
-        ParkingSpace parkingSpace = new ParkingSpace();
-        parkingSpace.setParkingSpaceId(parkingSpaceId);
-        return parkingSpace;
+        return parkingSpaceRepository.findById(parkingSpaceId)
+                .orElseThrow(() -> new ParkingSpaceNotFoundException(parkingSpaceId));
     }
 
     @Override
     public ParkingSpace createParkingSpace(ParkingSpace parkingSpace) {
-        // TODO: Реализовать создание парковочного места
-        parkingSpace.setParkingSpaceId(UUID.randomUUID());
-        return parkingSpace;
+        return parkingSpaceRepository.save(parkingSpace);
     }
 
     @Override
     public ParkingSpace updateParkingSpace(UUID parkingSpaceId, ParkingSpace parkingSpace) {
-        // TODO: Реализовать обновление парковочного места
-        parkingSpace.setParkingSpaceId(parkingSpaceId);
-        return parkingSpace;
+        ParkingSpace existingParkingSpace = getParkingSpaceById(parkingSpaceId);
+        existingParkingSpace.setSpaceNumber(parkingSpace.getSpaceNumber());
+        existingParkingSpace.setStatus(parkingSpace.getStatus());
+        existingParkingSpace.setPricePerDay(parkingSpace.getPricePerDay());
+        return parkingSpaceRepository.save(existingParkingSpace);
     }
 
     @Override
     public void deleteParkingSpace(UUID parkingSpaceId) {
-        // TODO: Реализовать удаление парковочного места
+        if (!parkingSpaceRepository.existsById(parkingSpaceId)) {
+            throw new ParkingSpaceNotFoundException(parkingSpaceId);
+        }
+        parkingSpaceRepository.deleteById(parkingSpaceId);
     }
 } 
