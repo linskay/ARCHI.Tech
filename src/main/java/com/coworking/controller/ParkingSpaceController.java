@@ -54,7 +54,7 @@ public class ParkingSpaceController {
 
     @Operation(summary = "Создать новое парковочное место")
     @ApiResponses(value = {
-        @ApiResponse(responseCode = "200", description = "Парковочное место успешно создано",
+        @ApiResponse(responseCode = "201", description = "Парковочное место успешно создано",
             content = @Content(schema = @Schema(implementation = ParkingSpace.class))),
         @ApiResponse(responseCode = "400", description = "Некорректные данные"),
         @ApiResponse(responseCode = "401", description = "Неавторизованный доступ"),
