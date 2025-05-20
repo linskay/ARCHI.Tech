@@ -54,7 +54,7 @@ public class SupportTicketController {
 
     @Operation(summary = "Создать новый тикет поддержки")
     @ApiResponses(value = {
-        @ApiResponse(responseCode = "200", description = "Тикет успешно создан",
+        @ApiResponse(responseCode = "201", description = "Тикет успешно создан",
             content = @Content(schema = @Schema(implementation = SupportTicket.class))),
         @ApiResponse(responseCode = "400", description = "Некорректные данные"),
         @ApiResponse(responseCode = "401", description = "Неавторизованный доступ"),
@@ -64,7 +64,7 @@ public class SupportTicketController {
     public ResponseEntity<SupportTicket> createSupportTicket(
             @Parameter(description = "Данные тикета поддержки", required = true)
             @RequestBody SupportTicket supportTicket) {
-        return ResponseEntity.ok(supportTicketService.createSupportTicket(supportTicket));
+        return ResponseEntity.status(201).body(supportTicketService.createSupportTicket(supportTicket));
     }
 
     @Operation(summary = "Обновить тикет поддержки")
