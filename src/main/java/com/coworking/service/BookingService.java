@@ -3,15 +3,16 @@ package com.coworking.service;
 import com.coworking.model.Booking;
 
 import java.util.List;
+import java.util.UUID;
 
 public interface BookingService {
     Booking createBooking(Booking booking);
 
-    Booking getBookingById(Long bookingId);
+    Booking getBookingById(UUID bookingId);
 
     List<Booking> getAllBookings();
 
-    Booking updateBooking(Long bookingId, Booking booking);
+    Booking updateBooking(UUID bookingId, Booking booking);
 
-    void deleteBooking(Long bookingId);
+    void deleteBooking(UUID bookingId);
 }
