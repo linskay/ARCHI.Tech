@@ -64,7 +64,7 @@ public class ParkingSpaceController {
     public ResponseEntity<ParkingSpace> createParkingSpace(
             @Parameter(description = "Данные парковочного места", required = true)
             @RequestBody ParkingSpace parkingSpace) {
-        return ResponseEntity.ok(parkingSpaceService.createParkingSpace(parkingSpace));
+        return ResponseEntity.status(201).body(parkingSpaceService.createParkingSpace(parkingSpace));
     }
 
     @Operation(summary = "Обновить парковочное место")
