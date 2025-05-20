@@ -35,7 +35,6 @@ public class UserServiceImpl implements UserService {
     @Override
     public User updateUser(UUID userId, User user) {
         User existingUser = getUserById(userId);
-        existingUser.setUserId(userId);
         existingUser.setFirstName(user.getFirstName());
         existingUser.setLastName(user.getLastName());
         existingUser.setEmail(user.getEmail());
