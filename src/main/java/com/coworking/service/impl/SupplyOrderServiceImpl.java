@@ -1,44 +1,70 @@
 package com.coworking.service.impl;
 
+import com.coworking.exception.SupplyOrderNotFoundException;
 import com.coworking.model.SupplyOrder;
+import com.coworking.model.User;
+import com.coworking.repository.SupplyOrderRepository;
 import com.coworking.service.SupplyOrderService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
 
 @Service
+@RequiredArgsConstructor
 public class SupplyOrderServiceImpl implements SupplyOrderService {
+
+    private final SupplyOrderRepository supplyOrderRepository;
+    private final UserRepository userRepository;
 
     @Override
     public List<SupplyOrder> getAllSupplyOrders() {
-        // TODO: Реализовать получение всех заказов поставок
-        return List.of();
+        return supplyOrderRepository.findAll();
     }
 
     @Override
     public SupplyOrder getSupplyOrderById(UUID orderId) {
-        // TODO: Реализовать получение заказа поставки по ID
-        SupplyOrder supplyOrder = new SupplyOrder();
-        supplyOrder.setOrderId(orderId);
-        return supplyOrder;
+        return supplyOrderRepository.findById(orderId)
+                .orElseThrow(() -> new SupplyOrderNotFoundException(orderId));
     }
 
     @Override
     public SupplyOrder createSupplyOrder(SupplyOrder supplyOrder) {
-        // TODO: Реализовать создание заказа поставки
-        supplyOrder.setOrderId(UUID.randomUUID());
-        return supplyOrder;
+        UUID userId = supplyOrder.getUser().getUserId();
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new UserNotFoundException(userId));
+
+        supplyOrder.setUser(user);
+        supplyOrder.setOrderDate(LocalDateTime.now());
+        supplyOrder.setStatus(SupplyOrder.SupplyOrderStatus.PENDING);
+        return supplyOrderRepository.save(supplyOrder);
     }
 
     @Override
     public SupplyOrder updateSupplyOrder(UUID orderId, SupplyOrder supplyOrder) {
-        // TODO: Реализовать обновление заказа поставки
-        supplyOrder.setOrderId(orderId);
-        return supplyOrder;
+        SupplyOrder existingOrder = supplyOrderRepository.findById(orderId)
+                .orElseThrow(() -> new SupplyOrderNotFoundException(orderId));
+
+        existingOrder.setItems(supplyOrder.getItems());
+        existingOrder.setStatus(supplyOrder.getStatus());
+
+        if (supplyOrder.getUser() != null) {
+            UUID userId = supplyOrder.getUser().getUserId();
+            User user = userRepository.findById(userId)
+                    .orElseThrow(() -> new UserNotFoundException(userId));
+            existingOrder.setUser(user);
+        }
+
+        return supplyOrderRepository.save(existingOrder);
     }
 
     @Override
     public void deleteSupplyOrder(UUID orderId) {
-        // TODO: Реализовать удаление заказа поставки
+        if (!supplyOrderRepository.existsById(orderId)) {
+            throw new SupplyOrderNotFoundException(orderId);
+        }
+        supplyOrderRepository.deleteById(orderId);
     }
 } 

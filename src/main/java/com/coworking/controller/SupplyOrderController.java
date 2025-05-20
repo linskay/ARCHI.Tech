@@ -54,7 +54,7 @@ public class SupplyOrderController {
 
     @Operation(summary = "Создать новый заказ поставки")
     @ApiResponses(value = {
-        @ApiResponse(responseCode = "200", description = "Заказ успешно создан",
+        @ApiResponse(responseCode = "201", description = "Заказ успешно создан",
             content = @Content(schema = @Schema(implementation = SupplyOrder.class))),
         @ApiResponse(responseCode = "400", description = "Некорректные данные"),
         @ApiResponse(responseCode = "401", description = "Неавторизованный доступ"),
@@ -64,7 +64,7 @@ public class SupplyOrderController {
     public ResponseEntity<SupplyOrder> createSupplyOrder(
             @Parameter(description = "Данные заказа поставки", required = true)
             @RequestBody SupplyOrder supplyOrder) {
-        return ResponseEntity.ok(supplyOrderService.createSupplyOrder(supplyOrder));
+        return ResponseEntity.status(201).body(supplyOrderService.createSupplyOrder(supplyOrder));
     }
 
     @Operation(summary = "Обновить заказ поставки")
