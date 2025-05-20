@@ -54,7 +54,7 @@ public class GuestAccessController {
 
     @Operation(summary = "Создать новый запрос на гостевой доступ")
     @ApiResponses(value = {
-        @ApiResponse(responseCode = "200", description = "Запрос успешно создан",
+        @ApiResponse(responseCode = "201", description = "Запрос успешно создан",
             content = @Content(schema = @Schema(implementation = GuestAccess.class))),
         @ApiResponse(responseCode = "400", description = "Некорректные данные"),
         @ApiResponse(responseCode = "401", description = "Неавторизованный доступ"),
@@ -64,7 +64,7 @@ public class GuestAccessController {
     public ResponseEntity<GuestAccess> createGuestAccess(
             @Parameter(description = "Данные запроса на гостевой доступ", required = true)
             @RequestBody GuestAccess guestAccess) {
-        return ResponseEntity.ok(guestAccessService.createGuestAccess(guestAccess));
+        return ResponseEntity.status(201).body(guestAccessService.createGuestAccess(guestAccess));
     }
 
     @Operation(summary = "Обновить запрос на гостевой доступ")
