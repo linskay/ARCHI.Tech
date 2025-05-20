@@ -2,10 +2,14 @@ package com.coworking.model;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
+
 import java.time.LocalDateTime;
 import java.util.UUID;
 
-@Data
+@Getter
+@Setter
 @Entity
 @Table(name = "bookings")
 public class Booking {
@@ -33,7 +37,10 @@ public class Booking {
     @Enumerated(EnumType.STRING)
     @Column(nullable = false)
     private BookingStatus status;
-    
+
+    public void setId(UUID bookingId) {
+    }
+
     public enum BookingStatus {
         PENDING, CONFIRMED, CANCELED, COMPLETED
     }
