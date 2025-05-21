@@ -8,18 +8,9 @@ import com.coworking.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
-import java.time.LocalDateTime;
-import java.util.List;
-import java.util.UUID;
-
 @Component
 @RequiredArgsConstructor
 public class SupplyOrderMapper {
-    UUID orderId;
-    UUID userId;
-    List<String> items;
-    LocalDateTime orderDate;
-    SupplyOrder.SupplyOrderStatus status;
 
     private final UserRepository userRepository;
 
@@ -37,8 +28,8 @@ public class SupplyOrderMapper {
         return supplyOrderDTO;
     }
 
-    public SupplyOrder toEntity (SupplyOrderDTO supplyOrderDTO) {
-        if(supplyOrderDTO == null) {
+    public SupplyOrder toEntity(SupplyOrderDTO supplyOrderDTO) {
+        if (supplyOrderDTO == null) {
             return null;
         }
         SupplyOrder supplyOrder = new SupplyOrder();

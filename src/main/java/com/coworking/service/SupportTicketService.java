@@ -1,13 +1,14 @@
 package com.coworking.service;
 
+import com.coworking.dto.SupportTicketDTO;
 import com.coworking.model.SupportTicket;
 import java.util.List;
 import java.util.UUID;
 
 public interface SupportTicketService {
-    List<SupportTicket> getAllSupportTickets();
-    SupportTicket getSupportTicketById(UUID ticketId);
-    SupportTicket createSupportTicket(SupportTicket supportTicket);
-    SupportTicket updateSupportTicket(UUID ticketId, SupportTicket supportTicket);
+    List<SupportTicketDTO> getAllSupportTickets();
+    SupportTicketDTO getSupportTicketById(UUID ticketId);
+    SupportTicketDTO createSupportTicket(SupportTicketDTO supportTicketDTO);
+    SupportTicketDTO updateSupportTicket(UUID ticketId, SupportTicketDTO supportTicketDTO);
     void deleteSupportTicket(UUID ticketId);
 } 

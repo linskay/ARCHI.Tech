@@ -1,7 +1,9 @@
 package com.coworking.service.impl;
 
+import com.coworking.dto.SupportTicketDTO;
 import com.coworking.exception.SupportTicketNotFoundException;
 import com.coworking.exception.UserNotFoundException;
+import com.coworking.mapper.SupportTicketMapper;
 import com.coworking.model.SupportTicket;
 import com.coworking.model.User;
 import com.coworking.repository.SupportTicketRepository;
@@ -9,10 +11,9 @@ import com.coworking.service.SupportTicketService;
 import com.coworking.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -20,50 +21,58 @@ public class SupportTicketServiceImpl implements SupportTicketService {
 
     private final SupportTicketRepository supportTicketRepository;
     private final UserRepository userRepository;
+    private final SupportTicketMapper ticketMapper;
 
     @Override
-    public List<SupportTicket> getAllSupportTickets() {
-        return supportTicketRepository.findAll();
+    public List<SupportTicketDTO> getAllSupportTickets() {
+        List<SupportTicket> tickets = supportTicketRepository.findAll();
+        return tickets.stream()
+                .map(ticketMapper::toDTO)
+                .collect(Collectors.toList());
     }
 
     @Override
-    public SupportTicket getSupportTicketById(UUID ticketId) {
-        return supportTicketRepository.findById(ticketId)
+    public SupportTicketDTO getSupportTicketById(UUID ticketId) {
+        SupportTicket ticket = supportTicketRepository.findById(ticketId)
                 .orElseThrow(() -> new SupportTicketNotFoundException(ticketId));
+        return ticketMapper.toDTO(ticket);
     }
 
     @Override
-    public SupportTicket createSupportTicket(SupportTicket supportTicket) {
-        UUID userId = supportTicket.getUser().getUserId();
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new UserNotFoundException(userId));
-
-        supportTicket.setUser(user);
-        supportTicket.setSubject(supportTicket.getSubject());
-        supportTicket.setDescription(supportTicket.getDescription());
-        supportTicket.setCreationDate(LocalDateTime.now());
-        supportTicket.setStatus(SupportTicket.TicketStatus.OPEN);
-        return supportTicketRepository.save(supportTicket);
+    public SupportTicketDTO createSupportTicket(SupportTicketDTO ticketDTO) {
+        SupportTicket ticket = ticketMapper.toEntity(ticketDTO);
+        SupportTicket savedTicket = supportTicketRepository.save(ticket);
+        return ticketMapper.toDTO(savedTicket);
     }
 
     @Override
-    public SupportTicket updateSupportTicket(UUID ticketId, SupportTicket supportTicket) {
+    public SupportTicketDTO updateSupportTicket(UUID ticketId, SupportTicketDTO ticketDTO) {
         SupportTicket existingTicket = supportTicketRepository.findById(ticketId)
                 .orElseThrow(() -> new SupportTicketNotFoundException(ticketId));
 
-        if (supportTicket.getUser() != null) {
-            UUID userId = supportTicket.getUser().getUserId();
-            User user = userRepository.findById(userId)
-                    .orElseThrow(() -> new UserNotFoundException(userId));
+        if (ticketDTO.getDescription() != null) {
+            existingTicket.setDescription(ticketDTO.getDescription());
+        }
+        if (ticketDTO.getSubject() != null) {
+            existingTicket.setSubject(ticketDTO.getSubject());
+        }
+        if (ticketDTO.getPriority() != null) {
+            existingTicket.setPriority(ticketDTO.getPriority());
+        }
+        if (ticketDTO.getStatus() != null) {
+            existingTicket.setStatus(ticketDTO.getStatus());
+        }
+        if (ticketDTO.getCreationDate() != null) {
+            existingTicket.setCreationDate(ticketDTO.getCreationDate());
+        }
+        if (ticketDTO.getUserId() != null) {
+            User user = userRepository.findById(ticketDTO.getUserId())
+                    .orElseThrow(() -> new UserNotFoundException(ticketDTO.getUserId()));
             existingTicket.setUser(user);
         }
+        SupportTicket updatedTicket = supportTicketRepository.save(existingTicket);
 
-        existingTicket.setSubject(supportTicket.getSubject());
-        existingTicket.setDescription(supportTicket.getDescription());
-        existingTicket.setPriority(supportTicket.getPriority());
-        existingTicket.setStatus(supportTicket.getStatus());
-
-        return supportTicketRepository.save(existingTicket);
+        return ticketMapper.toDTO(updatedTicket);
     }
 
     @Override

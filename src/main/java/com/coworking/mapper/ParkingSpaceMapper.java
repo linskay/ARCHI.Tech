@@ -1,20 +1,10 @@
 package com.coworking.mapper;
 
-import com.coworking.dto.BookingDTO;
 import com.coworking.dto.ParkingSpaceDTO;
-import com.coworking.exception.UserNotFoundException;
-import com.coworking.exception.WorkspaceNotFoundException;
-import com.coworking.model.Booking;
 import com.coworking.model.ParkingSpace;
-import com.coworking.model.User;
-import com.coworking.model.Workspace;
-import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
-import java.util.UUID;
-
 @Component
-@RequiredArgsConstructor
 public class ParkingSpaceMapper {
     public ParkingSpaceDTO toDTO(ParkingSpace parkingSpace) {
         if (parkingSpace == null) {
