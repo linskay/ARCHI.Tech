@@ -24,8 +24,8 @@ public class BookingMapper {
         }
         BookingDTO bookingDTO = new BookingDTO();
         bookingDTO.setBookingId(booking.getBookingId());
-        bookingDTO.setWorkspaceId(booking.getWorkspace().getWorkspaceId()); // Маппинг ID рабочего пространства
-        bookingDTO.setUserId(booking.getUser().getUserId()); // Маппинг ID пользователя
+        bookingDTO.setWorkspaceId(booking.getWorkspace().getWorkspaceId());
+        bookingDTO.setUserId(booking.getUser().getUserId());
         bookingDTO.setStartTime(booking.getStartTime());
         bookingDTO.setEndTime(booking.getEndTime());
         bookingDTO.setTotalPrice(booking.getTotalPrice());
@@ -41,7 +41,7 @@ public class BookingMapper {
         booking.setBookingId(bookingDTO.getBookingId());
 
         Workspace workspace = workspaceRepository.findById(bookingDTO.getWorkspaceId())
-                .orElseThrow(() -> new WorkspaceNotFoundException(bookingDTO.getWorkspaceId())); // обработка ошибок
+                .orElseThrow(() -> new WorkspaceNotFoundException(bookingDTO.getWorkspaceId()));
         User user = userRepository.findById(bookingDTO.getUserId())
                 .orElseThrow(() -> new UserNotFoundException(bookingDTO.getUserId()));
 

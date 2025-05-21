@@ -16,22 +16,15 @@ import java.util.UUID;
 public class BookingDTO {
     private UUID bookingId;
 
-
     private UUID workspaceId;
-
 
     private UUID userId;
 
-
     private LocalDateTime startTime;
-
 
     private LocalDateTime endTime;
 
-
     private Double totalPrice;
 
-
     private Booking.BookingStatus status;
-
 }

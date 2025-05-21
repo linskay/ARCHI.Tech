@@ -1,7 +1,6 @@
 package com.coworking.service;
 
 import com.coworking.dto.BookingDTO;
-import com.coworking.model.Booking;
 
 import java.util.List;
 import java.util.UUID;

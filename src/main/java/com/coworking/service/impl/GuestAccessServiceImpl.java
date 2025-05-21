@@ -1,7 +1,9 @@
 package com.coworking.service.impl;
 
+import com.coworking.dto.GuestAccessDTO;
 import com.coworking.exception.GuestAccessNotFoundException;
 import com.coworking.exception.UserNotFoundException;
+import com.coworking.mapper.GuestAccessMapper;
 import com.coworking.model.GuestAccess;
 import com.coworking.model.User;
 import com.coworking.repository.GuestAccessRepository;
@@ -12,6 +14,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -19,51 +22,58 @@ public class GuestAccessServiceImpl implements GuestAccessService {
 
     private final GuestAccessRepository guestAccessRepository;
     private final UserRepository userRepository;
+    private final GuestAccessMapper guestAccessMapper;
 
     @Override
-    public List<GuestAccess> getAllGuestAccess() {
-        return guestAccessRepository.findAll();
+    public List<GuestAccessDTO> getAllGuestAccess() {
+        List<GuestAccess> accesses = guestAccessRepository.findAll();
+        return accesses.stream()
+                .map(guestAccessMapper::toDTO)
+                .collect(Collectors.toList());
     }
 
     @Override
-    public GuestAccess getGuestAccessById(UUID guestAccessId) {
-        return guestAccessRepository.findById(guestAccessId)
+    public GuestAccessDTO getGuestAccessById(UUID guestAccessId) {
+        GuestAccess guestAccess = guestAccessRepository.findById(guestAccessId)
                 .orElseThrow(() -> new GuestAccessNotFoundException(guestAccessId));
+        return guestAccessMapper.toDTO(guestAccess);
     }
 
     @Override
-    public GuestAccess createGuestAccess(GuestAccess guestAccess) {
-        UUID userId = guestAccess.getUser().getUserId();
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new UserNotFoundException(userId));
-
-        guestAccess.setUser(user);
-        guestAccess.setGuestName(guestAccess.getGuestName());
-        guestAccess.setGuestEmail(guestAccess.getGuestEmail());
-        guestAccess.setAccessStartTime(guestAccess.getAccessStartTime());
-        guestAccess.setAccessEndTime(guestAccess.getAccessEndTime());
-        guestAccess.setStatus(GuestAccess.GuestAccessStatus.PENDING);
-        return guestAccessRepository.save(guestAccess);
+    public GuestAccessDTO createGuestAccess(GuestAccessDTO guestAccessDTO) {
+        GuestAccess guestAccess = guestAccessMapper.toEntity(guestAccessDTO);
+        GuestAccess savedGuestAccess = guestAccessRepository.save(guestAccess);
+        return guestAccessMapper.toDTO(savedGuestAccess);
     }
 
     @Override
-    public GuestAccess updateGuestAccess(UUID guestAccessId, GuestAccess guestAccess) {
+    public GuestAccessDTO updateGuestAccess(UUID guestAccessId, GuestAccessDTO guestAccessDTO) {
         GuestAccess existingAccess = guestAccessRepository.findById(guestAccessId)
                 .orElseThrow(() -> new GuestAccessNotFoundException(guestAccessId));
 
-        if (guestAccess.getUser() != null) {
-            UUID userId = guestAccess.getUser().getUserId();
-            User user = userRepository.findById(userId)
-                    .orElseThrow(() -> new UserNotFoundException(userId));
+        if (guestAccessDTO.getAccessStartTime() != null) {
+            existingAccess.setAccessStartTime(guestAccessDTO.getAccessStartTime());
+        }
+        if (guestAccessDTO.getAccessEndTime() != null) {
+            existingAccess.setAccessEndTime(guestAccessDTO.getAccessEndTime());
+        }
+        if (guestAccessDTO.getGuestName() != null) {
+            existingAccess.setGuestName(guestAccessDTO.getGuestName());
+        }
+        if (guestAccessDTO.getStatus() != null) {
+            existingAccess.setStatus(guestAccessDTO.getStatus());
+        }
+        if (guestAccessDTO.getGuestEmail() != null) {
+            existingAccess.setGuestEmail(guestAccessDTO.getGuestEmail());
+        }
+        if (guestAccessDTO.getUserId() != null) {
+            User user = userRepository.findById(guestAccessDTO.getUserId())
+                    .orElseThrow(() -> new UserNotFoundException(guestAccessDTO.getUserId()));
             existingAccess.setUser(user);
         }
-        existingAccess.setGuestName(guestAccess.getGuestName());
-        existingAccess.setGuestEmail(guestAccess.getGuestEmail());
-        existingAccess.setAccessStartTime(guestAccess.getAccessStartTime());
-        existingAccess.setAccessEndTime(guestAccess.getAccessEndTime());
-        existingAccess.setStatus(guestAccess.getStatus());
+        GuestAccess updatedGuestAccess = guestAccessRepository.save(existingAccess);
 
-        return guestAccessRepository.save(existingAccess);
+        return guestAccessMapper.toDTO(updatedGuestAccess);
     }
 
     @Override
