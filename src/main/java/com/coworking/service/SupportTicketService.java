@@ -1,7 +1,6 @@
 package com.coworking.service;
 
 import com.coworking.dto.SupportTicketDTO;
-import com.coworking.model.SupportTicket;
 import java.util.List;
 import java.util.UUID;
 

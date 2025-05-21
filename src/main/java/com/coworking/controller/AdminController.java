@@ -1,5 +1,6 @@
 package com.coworking.controller;
 
+import com.coworking.dto.WorkspaceDTO;
 import com.coworking.model.*;
 import com.coworking.service.AdminService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -116,7 +117,7 @@ public class AdminController {
         @ApiResponse(responseCode = "500", description = "Внутренняя ошибка сервера")
     })
     @GetMapping("/workspaces")
-    public ResponseEntity<List<Workspace>> getAllWorkspaces() {
+    public ResponseEntity<List<WorkspaceDTO>> getAllWorkspaces() {
         return ResponseEntity.ok(adminService.getAllWorkspaces());
     }
 
@@ -129,7 +130,7 @@ public class AdminController {
         @ApiResponse(responseCode = "500", description = "Внутренняя ошибка сервера")
     })
     @GetMapping("/workspaces/{workspaceId}")
-    public ResponseEntity<Workspace> getWorkspaceById(
+    public ResponseEntity<WorkspaceDTO> getWorkspaceById(
             @Parameter(description = "ID рабочего пространства") @PathVariable UUID workspaceId) {
         return ResponseEntity.ok(adminService.getWorkspaceById(workspaceId));
     }
@@ -143,9 +144,9 @@ public class AdminController {
         @ApiResponse(responseCode = "500", description = "Внутренняя ошибка сервера")
     })
     @PostMapping("/workspaces")
-    public ResponseEntity<Workspace> createWorkspace(
-            @Parameter(description = "Данные рабочего пространства") @RequestBody Workspace workspace) {
-        return ResponseEntity.ok(adminService.createWorkspace(workspace));
+    public ResponseEntity<WorkspaceDTO> createWorkspace(
+            @Parameter(description = "Данные рабочего пространства") @RequestBody WorkspaceDTO workspaceDTO) {
+        return ResponseEntity.ok(adminService.createWorkspace(workspaceDTO));
     }
 
     @Operation(summary = "Обновить данные рабочего пространства")
@@ -158,10 +159,10 @@ public class AdminController {
         @ApiResponse(responseCode = "500", description = "Внутренняя ошибка сервера")
     })
     @PutMapping("/workspaces/{workspaceId}")
-    public ResponseEntity<Workspace> updateWorkspace(
+    public ResponseEntity<WorkspaceDTO> updateWorkspace(
             @Parameter(description = "ID рабочего пространства") @PathVariable UUID workspaceId,
-            @Parameter(description = "Новые данные рабочего пространства") @RequestBody Workspace workspace) {
-        return ResponseEntity.ok(adminService.updateWorkspace(workspaceId, workspace));
+            @Parameter(description = "Новые данные рабочего пространства") @RequestBody WorkspaceDTO workspaceDTO) {
+        return ResponseEntity.ok(adminService.updateWorkspace(workspaceId, workspaceDTO));
     }
 
     @Operation(summary = "Удалить рабочее пространство")

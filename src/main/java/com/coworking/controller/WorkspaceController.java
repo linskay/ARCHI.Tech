@@ -1,10 +1,11 @@
 package com.coworking.controller;
 
-import com.coworking.model.Workspace;
+import com.coworking.dto.WorkspaceDTO;
 import com.coworking.service.WorkspaceService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
 import java.util.List;
 import java.util.UUID;
 
@@ -16,23 +17,23 @@ public class WorkspaceController {
     private final WorkspaceService workspaceService;
 
     @GetMapping
-    public ResponseEntity<List<Workspace>> getAllWorkspaces() {
+    public ResponseEntity<List<WorkspaceDTO>> getAllWorkspaces() {
         return ResponseEntity.ok(workspaceService.getAllWorkspaces());
     }
 
     @GetMapping("/{workspaceId}")
-    public ResponseEntity<Workspace> getWorkspaceById(@PathVariable UUID workspaceId) {
+    public ResponseEntity<WorkspaceDTO> getWorkspaceById(@PathVariable UUID workspaceId) {
         return ResponseEntity.ok(workspaceService.getWorkspaceById(workspaceId));
     }
 
     @PostMapping
-    public ResponseEntity<Workspace> createWorkspace(@RequestBody Workspace workspace) {
-        return ResponseEntity.status(201).body(workspaceService.createWorkspace(workspace));
+    public ResponseEntity<WorkspaceDTO> createWorkspace(@RequestBody WorkspaceDTO workspaceDTO) {
+        return ResponseEntity.status(201).body(workspaceService.createWorkspace(workspaceDTO));
     }
 
     @PutMapping("/{workspaceId}")
-    public ResponseEntity<Workspace> updateWorkspace(@PathVariable UUID workspaceId, @RequestBody Workspace workspace) {
-        return ResponseEntity.ok(workspaceService.updateWorkspace(workspaceId, workspace));
+    public ResponseEntity<WorkspaceDTO> updateWorkspace(@PathVariable UUID workspaceId, @RequestBody WorkspaceDTO workspaceDTO) {
+        return ResponseEntity.ok(workspaceService.updateWorkspace(workspaceId, workspaceDTO));
     }
 
     @DeleteMapping("/{workspaceId}")

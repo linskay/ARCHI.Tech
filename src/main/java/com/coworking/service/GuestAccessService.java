@@ -1,7 +1,6 @@
 package com.coworking.service;
 
 import com.coworking.dto.GuestAccessDTO;
-import com.coworking.model.GuestAccess;
 import java.util.List;
 import java.util.UUID;
 

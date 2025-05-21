@@ -1,45 +1,66 @@
 package com.coworking.service.impl;
 
+import com.coworking.dto.WorkspaceDTO;
 import com.coworking.exception.WorkspaceNotFoundException;
+import com.coworking.mapper.WorkspaceMapper;
 import com.coworking.model.Workspace;
 import com.coworking.repository.WorkspaceRepository;
 import com.coworking.service.WorkspaceService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 public class WorkspaceServiceImpl implements WorkspaceService {
     private final WorkspaceRepository workspaceRepository;
+    private final WorkspaceMapper workspaceMapper;
 
     @Override
-    public List<Workspace> getAllWorkspaces() {
-        return workspaceRepository.findAll();
+    public List<WorkspaceDTO> getAllWorkspaces() {
+        List<Workspace> workspaces = workspaceRepository.findAll();
+        return workspaces.stream()
+                .map(workspaceMapper::toDTO)
+                .collect(Collectors.toList());
     }
 
     @Override
-    public Workspace getWorkspaceById(UUID workspaceId) {
-       return workspaceRepository.findById(workspaceId)
+    public WorkspaceDTO getWorkspaceById(UUID workspaceId) {
+        Workspace workspace = workspaceRepository.findById(workspaceId)
                 .orElseThrow(() -> new WorkspaceNotFoundException(workspaceId));
+        return workspaceMapper.toDTO(workspace);
     }
 
     @Override
-    public Workspace createWorkspace(Workspace workspace) {
-        return workspaceRepository.save(workspace);
+    public WorkspaceDTO createWorkspace(WorkspaceDTO workspaceDTO) {
+        Workspace workspace = workspaceMapper.toEntity(workspaceDTO);
+        Workspace savedWorkspace = workspaceRepository.save(workspace);
+        return workspaceMapper.toDTO(savedWorkspace);
     }
 
     @Override
-    public Workspace updateWorkspace(UUID workspaceId, Workspace workspace) {
-        Workspace existingWorkspace = getWorkspaceById(workspaceId);
+    public WorkspaceDTO updateWorkspace(UUID workspaceId, WorkspaceDTO workspaceDTO) {
+        Workspace existingWorkspace = workspaceRepository.findById(workspaceId)
+                .orElseThrow(() -> new WorkspaceNotFoundException(workspaceId));
 
-        existingWorkspace.setName(workspace.getName());
-        existingWorkspace.setDescription(workspace.getDescription());
-        existingWorkspace.setPricePerHour(workspace.getPricePerHour());
-        existingWorkspace.setStatus(workspace.getStatus());
+        if (workspaceDTO.getName() != null) {
+            existingWorkspace.setName(workspaceDTO.getName());
+        }
+        if (workspaceDTO.getDescription() != null) {
+            existingWorkspace.setDescription(workspaceDTO.getDescription());
+        }
+        if (workspaceDTO.getPricePerHour() != null) {
+            existingWorkspace.setPricePerHour(workspaceDTO.getPricePerHour());
+        }
+        if (workspaceDTO.getStatus() != null) {
+            existingWorkspace.setStatus(workspaceDTO.getStatus());
+        }
+        Workspace updatedWorkspace = workspaceRepository.save(existingWorkspace);
 
-        return workspaceRepository.save(existingWorkspace);
+        return workspaceMapper.toDTO(updatedWorkspace);
     }
 
     @Override
