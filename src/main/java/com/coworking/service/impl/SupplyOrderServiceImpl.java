@@ -1,7 +1,9 @@
 package com.coworking.service.impl;
 
+import com.coworking.dto.SupplyOrderDTO;
 import com.coworking.exception.SupplyOrderNotFoundException;
 import com.coworking.exception.UserNotFoundException;
+import com.coworking.mapper.SupplyOrderMapper;
 import com.coworking.model.SupplyOrder;
 import com.coworking.model.User;
 import com.coworking.repository.SupplyOrderRepository;
@@ -10,9 +12,9 @@ import com.coworking.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -20,46 +22,53 @@ public class SupplyOrderServiceImpl implements SupplyOrderService {
 
     private final SupplyOrderRepository supplyOrderRepository;
     private final UserRepository userRepository;
+    private final SupplyOrderMapper supplyOrderMapper;
 
     @Override
-    public List<SupplyOrder> getAllSupplyOrders() {
-        return supplyOrderRepository.findAll();
+    public List<SupplyOrderDTO> getAllSupplyOrders() {
+        List<SupplyOrder> orders = supplyOrderRepository.findAll();
+        return orders.stream()
+                .map(supplyOrderMapper::toDTO)
+                .collect(Collectors.toList());
     }
 
     @Override
-    public SupplyOrder getSupplyOrderById(UUID orderId) {
-        return supplyOrderRepository.findById(orderId)
+    public SupplyOrderDTO getSupplyOrderById(UUID orderId) {
+        SupplyOrder order = supplyOrderRepository.findById(orderId)
                 .orElseThrow(() -> new SupplyOrderNotFoundException(orderId));
+        return supplyOrderMapper.toDTO(order);
     }
 
     @Override
-    public SupplyOrder createSupplyOrder(SupplyOrder supplyOrder) {
-        UUID userId = supplyOrder.getUser().getUserId();
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new UserNotFoundException(userId));
-
-        supplyOrder.setUser(user);
-        supplyOrder.setOrderDate(LocalDateTime.now());
-        supplyOrder.setStatus(SupplyOrder.SupplyOrderStatus.PENDING);
-        return supplyOrderRepository.save(supplyOrder);
+    public SupplyOrderDTO createSupplyOrder(SupplyOrderDTO supplyOrderDTO) {
+        SupplyOrder supplyOrder = supplyOrderMapper.toEntity(supplyOrderDTO);
+        SupplyOrder savedOrder = supplyOrderRepository.save(supplyOrder);
+        return supplyOrderMapper.toDTO(savedOrder);
     }
 
     @Override
-    public SupplyOrder updateSupplyOrder(UUID orderId, SupplyOrder supplyOrder) {
+    public SupplyOrderDTO updateSupplyOrder(UUID orderId, SupplyOrderDTO supplyOrderDTO) {
         SupplyOrder existingOrder = supplyOrderRepository.findById(orderId)
                 .orElseThrow(() -> new SupplyOrderNotFoundException(orderId));
 
-        existingOrder.setItems(supplyOrder.getItems());
-        existingOrder.setStatus(supplyOrder.getStatus());
-
-        if (supplyOrder.getUser() != null) {
-            UUID userId = supplyOrder.getUser().getUserId();
-            User user = userRepository.findById(userId)
-                    .orElseThrow(() -> new UserNotFoundException(userId));
+        if (supplyOrderDTO.getOrderDate() != null) {
+            existingOrder.setOrderDate(supplyOrderDTO.getOrderDate());
+        }
+        if (supplyOrderDTO.getItems() != null) {
+            existingOrder.setItems(supplyOrderDTO.getItems());
+        }
+        if (supplyOrderDTO.getUserId() != null) {
+            User user = userRepository.findById(supplyOrderDTO.getUserId())
+                    .orElseThrow(() -> new UserNotFoundException(supplyOrderDTO.getUserId()));
             existingOrder.setUser(user);
         }
+        if (supplyOrderDTO.getStatus() != null) {
+            existingOrder.setStatus(supplyOrderDTO.getStatus());
+        }
 
-        return supplyOrderRepository.save(existingOrder);
+        SupplyOrder updatedOrder = supplyOrderRepository.save(existingOrder);
+
+        return supplyOrderMapper.toDTO(updatedOrder);
     }
 
     @Override
