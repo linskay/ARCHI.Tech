@@ -1,13 +1,12 @@
 package com.coworking.model;
 
 import jakarta.persistence.*;
-import lombok.Data;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import java.time.LocalDateTime;
 import java.util.UUID;
-
+@AllArgsConstructor
+@NoArgsConstructor
 @Data
 @Entity
 @Table(name = "bookings")
