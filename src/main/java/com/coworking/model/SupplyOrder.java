@@ -13,7 +13,6 @@ import java.util.UUID;
 @NoArgsConstructor
 @Data
 @Entity
-@Table(name = "supply_orders")
 public class SupplyOrder {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)

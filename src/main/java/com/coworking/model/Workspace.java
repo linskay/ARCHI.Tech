@@ -6,11 +6,11 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.UUID;
+
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
 @Entity
-@Table(name = "workspaces")
 public class Workspace {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
