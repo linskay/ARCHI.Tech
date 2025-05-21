@@ -1,5 +1,6 @@
 package com.coworking.controller;
 
+import com.coworking.dto.BookingDTO;
 import com.coworking.model.Booking;
 import com.coworking.service.BookingService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -27,7 +28,7 @@ public class BookingController {
             @ApiResponse(responseCode = "500", description = "Внутренняя ошибка сервера")
     })
     @GetMapping
-    public ResponseEntity<List<Booking>> getAllBookings() {
+    public ResponseEntity<List<BookingDTO>> getAllBookings() {
         return ResponseEntity.ok(bookingService.getAllBookings());
     }
 
@@ -39,7 +40,7 @@ public class BookingController {
             @ApiResponse(responseCode = "500", description = "Внутренняя ошибка сервера")
     })
     @GetMapping("/{bookingId}")
-    public ResponseEntity<Booking> getBookingById(@PathVariable UUID bookingId) {
+    public ResponseEntity<BookingDTO> getBookingById(@PathVariable UUID bookingId) {
         return ResponseEntity.ok(bookingService.getBookingById(bookingId));
     }
 
@@ -51,8 +52,8 @@ public class BookingController {
             @ApiResponse(responseCode = "500", description = "Внутренняя ошибка сервера")
     })
     @PostMapping
-    public ResponseEntity<Booking> createBooking(@RequestBody Booking booking) {
-        return ResponseEntity.status(201).body(bookingService.createBooking(booking));
+    public ResponseEntity<BookingDTO> createBooking(@RequestBody BookingDTO bookingDTO) {
+        return ResponseEntity.status(201).body(bookingService.createBooking(bookingDTO));
     }
 
     @Operation(summary = "Обновить бронирование по ID")
@@ -64,8 +65,8 @@ public class BookingController {
             @ApiResponse(responseCode = "500", description = "Внутренняя ошибка сервера")
     })
     @PutMapping("/{bookingId}")
-    public ResponseEntity<Booking> updateBooking(@PathVariable UUID bookingId, @RequestBody Booking booking) {
-        return ResponseEntity.ok(bookingService.updateBooking(bookingId, booking));
+    public ResponseEntity<BookingDTO> updateBooking(@PathVariable UUID bookingId, @RequestBody BookingDTO bookingDTO) {
+        return ResponseEntity.ok(bookingService.updateBooking(bookingId, bookingDTO));
     }
 
     @Operation(summary = "Удалить бронирование по ID")

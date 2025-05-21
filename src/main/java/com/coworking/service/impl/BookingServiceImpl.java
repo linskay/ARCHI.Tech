@@ -1,50 +1,84 @@
 package com.coworking.service.impl;
 
+import com.coworking.dto.BookingDTO;
 import com.coworking.exception.BookingNotFoundException;
-import com.coworking.exception.SupplyOrderNotFoundException;
 import com.coworking.exception.UserNotFoundException;
+import com.coworking.exception.WorkspaceNotFoundException;
+import com.coworking.mapper.BookingMapper;
 import com.coworking.model.Booking;
 import com.coworking.model.User;
+import com.coworking.model.Workspace;
 import com.coworking.repository.BookingRepository;
+import com.coworking.repository.UserRepository;
+import com.coworking.repository.WorkspaceRepository;
 import com.coworking.service.BookingService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 public class BookingServiceImpl implements BookingService {
     private final BookingRepository bookingRepository;
+    private final WorkspaceRepository workspaceRepository;
+    private final UserRepository userRepository;
+    private final BookingMapper bookingMapper;
 
     @Override
-    public Booking createBooking(Booking booking) {
-        return bookingRepository.save(booking);
+    public BookingDTO createBooking(BookingDTO bookingDTO) {
+        Booking booking = bookingMapper.toEntity(bookingDTO);
+        Booking savedBooking = bookingRepository.save(booking);
+        return bookingMapper.toDTO(savedBooking);
     }
 
     @Override
-    public Booking getBookingById(UUID bookingId) {
-        return bookingRepository.findById(bookingId).orElseThrow(() -> new BookingNotFoundException(bookingId));
+    public BookingDTO getBookingById(UUID bookingId) {
+        Booking booking = bookingRepository.findById(bookingId)
+                .orElseThrow(() -> new BookingNotFoundException(bookingId));
+        return bookingMapper.toDTO(booking);
     }
 
     @Override
-    public List<Booking> getAllBookings() {
-        return bookingRepository.findAll();
+    public List<BookingDTO> getAllBookings() {
+        List<Booking> bookings = bookingRepository.findAll();
+        return  bookings.stream()
+                .map(bookingMapper::toDTO)
+                .collect(Collectors.toList());
     }
 
     @Override
-    public Booking updateBooking(UUID bookingId, Booking booking) {
-        Booking existingBooking = getBookingById(bookingId);
+    public BookingDTO updateBooking(UUID bookingId, BookingDTO bookingDTO) {
+        Booking existingBooking = bookingRepository.findById(bookingId)
+                .orElseThrow(() -> new BookingNotFoundException(bookingId));
 
-        existingBooking.setWorkspace(booking.getWorkspace());
-        existingBooking.setUser(booking.getUser());
-        existingBooking.setStartTime(booking.getStartTime());
-        existingBooking.setEndTime(booking.getEndTime());
-        existingBooking.setTotalPrice(booking.getTotalPrice());
-        existingBooking.setStatus(booking.getStatus());
+        if (bookingDTO.getStartTime() != null) {
+            existingBooking.setStartTime(bookingDTO.getStartTime());
+        }
+        if (bookingDTO.getEndTime() != null) {
+            existingBooking.setEndTime(bookingDTO.getEndTime());
+        }
+        if (bookingDTO.getTotalPrice() != null) {
+            existingBooking.setTotalPrice(bookingDTO.getTotalPrice());
+        }
+        if (bookingDTO.getStatus() != null) {
+            existingBooking.setStatus(bookingDTO.getStatus());
+        }
+        if (bookingDTO.getWorkspaceId() != null) {
+            Workspace workspace = workspaceRepository.findById(bookingDTO.getWorkspaceId())
+                    .orElseThrow(() -> new WorkspaceNotFoundException(bookingDTO.getWorkspaceId()));
+            existingBooking.setWorkspace(workspace);
+        }
+        if (bookingDTO.getUserId() != null) {
+            User user = userRepository.findById(bookingDTO.getUserId())
+                    .orElseThrow(() -> new UserNotFoundException(bookingDTO.getUserId()));
+            existingBooking.setUser(user);
+        }
+        Booking updatedBooking = bookingRepository.save(existingBooking);
 
-        return bookingRepository.save(existingBooking);
+        return bookingMapper.toDTO(updatedBooking);
     }
 
     @Override
