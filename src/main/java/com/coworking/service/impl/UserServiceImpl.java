@@ -1,6 +1,9 @@
 package com.coworking.service.impl;
 
+import com.coworking.dto.UserDTO;
+import com.coworking.exception.ParkingSpaceNotFoundException;
 import com.coworking.exception.UserNotFoundException;
+import com.coworking.mapper.UserMapper;
 import com.coworking.model.User;
 import com.coworking.repository.UserRepository;
 import com.coworking.service.UserService;
@@ -9,38 +12,63 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
+    private final UserMapper userMapper;
 
     @Override
-    public List<User> getAllUsers() {
-        return userRepository.findAll();
+    public List<UserDTO> getAllUsers() {
+        List<User> users = userRepository.findAll();
+        return users.stream()
+                .map(userMapper::toDTO)
+                .collect(Collectors.toList());
     }
 
     @Override
-    public User getUserById(UUID userId) {
-        return userRepository.findById(userId)
+    public UserDTO getUserById(UUID userId) {
+        User user = userRepository.findById(userId)
                 .orElseThrow(() -> new UserNotFoundException(userId));
+        return userMapper.toDTO(user);
     }
 
     @Override
-    public User createUser(User user) {
-        return userRepository.save(user);
+    public UserDTO createUser(UserDTO userDTO) {
+        User user = userMapper.toEntity(userDTO);
+        User savedUser = userRepository.save(user);
+        return userMapper.toDTO(savedUser);
     }
 
     @Override
-    public User updateUser(UUID userId, User user) {
-        User existingUser = getUserById(userId);
-        existingUser.setFirstName(user.getFirstName());
-        existingUser.setLastName(user.getLastName());
-        existingUser.setEmail(user.getEmail());
-        existingUser.setPhoneNumber(user.getPhoneNumber());
-        existingUser.setRole(user.getRole());
-        return userRepository.save(existingUser);
+    public UserDTO updateUser(UUID userId, UserDTO userDTO) {
+        User existingUser = userRepository.findById(userId)
+                .orElseThrow(() -> new ParkingSpaceNotFoundException(userId));
+
+        if (userDTO.getFirstName() != null) {
+            existingUser.setFirstName(userDTO.getFirstName());
+        }
+        if (userDTO.getLastName() != null) {
+            existingUser.setLastName(userDTO.getLastName());
+        }
+        if (userDTO.getEmail() != null) {
+            existingUser.setEmail(userDTO.getEmail());
+        }
+        if (userDTO.getPassword() != null) {
+            existingUser.setPassword(userDTO.getPassword());
+        }
+        if (userDTO.getPhoneNumber() != null) {
+            existingUser.setPhoneNumber(userDTO.getPhoneNumber());
+        }
+        if (userDTO.getRole() != null) {
+            existingUser.setRole(userDTO.getRole());
+        }
+        User updatedUser = userRepository.save(existingUser);
+
+        return userMapper.toDTO(updatedUser);
     }
 
     @Override
