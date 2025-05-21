@@ -1,23 +1,23 @@
 package com.coworking.service;
 
+import com.coworking.dto.UserDTO;
+import com.coworking.dto.WorkspaceDTO;
 import com.coworking.model.SystemStatistics;
-import com.coworking.model.User;
-import com.coworking.model.Workspace;
 import java.util.List;
 import java.util.UUID;
 
 public interface AdminService {
     SystemStatistics getSystemStatistics();
     
-    List<User> getAllUsers();
-    User getUserById(UUID userId);
-    User createUser(User user);
-    User updateUser(UUID userId, User user);
+    List<UserDTO> getAllUsers();
+    UserDTO getUserById(UUID userId);
+    UserDTO createUser(UserDTO userDTO);
+    UserDTO updateUser(UUID userId, UserDTO userDTO);
     void deleteUser(UUID userId);
     
-    List<Workspace> getAllWorkspaces();
-    Workspace getWorkspaceById(UUID workspaceId);
-    Workspace createWorkspace(Workspace workspace);
-    Workspace updateWorkspace(UUID workspaceId, Workspace workspace);
+    List<WorkspaceDTO> getAllWorkspaces();
+    WorkspaceDTO getWorkspaceById(UUID workspaceId);
+    WorkspaceDTO createWorkspace(WorkspaceDTO workspaceDTO);
+    WorkspaceDTO updateWorkspace(UUID workspaceId, WorkspaceDTO workspaceDTO);
     void deleteWorkspace(UUID workspaceId);
 } 

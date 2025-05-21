@@ -1,8 +1,8 @@
 package com.coworking.service.impl;
 
+import com.coworking.dto.UserDTO;
+import com.coworking.dto.WorkspaceDTO;
 import com.coworking.model.SystemStatistics;
-import com.coworking.model.User;
-import com.coworking.model.Workspace;
 import com.coworking.service.*;
 import org.springframework.stereotype.Service;
 import java.util.List;
@@ -50,23 +50,23 @@ public class AdminServiceImpl implements AdminService {
     }
 
     @Override
-    public List<User> getAllUsers() {
+    public List<UserDTO> getAllUsers() {
         return userService.getAllUsers();
     }
 
     @Override
-    public User getUserById(UUID userId) {
+    public UserDTO getUserById(UUID userId) {
         return userService.getUserById(userId);
     }
 
     @Override
-    public User createUser(User user) {
-        return userService.createUser(user);
+    public UserDTO createUser(UserDTO userDTO) {
+        return userService.createUser(userDTO);
     }
 
     @Override
-    public User updateUser(UUID userId, User user) {
-        return userService.updateUser(userId, user);
+    public UserDTO updateUser(UUID userId, UserDTO userDTO) {
+        return userService.updateUser(userId, userDTO);
     }
 
     @Override
@@ -75,23 +75,23 @@ public class AdminServiceImpl implements AdminService {
     }
 
     @Override
-    public List<Workspace> getAllWorkspaces() {
+    public List<WorkspaceDTO> getAllWorkspaces() {
         return workspaceService.getAllWorkspaces();
     }
 
     @Override
-    public Workspace getWorkspaceById(UUID workspaceId) {
+    public WorkspaceDTO getWorkspaceById(UUID workspaceId) {
         return workspaceService.getWorkspaceById(workspaceId);
     }
 
     @Override
-    public Workspace createWorkspace(Workspace workspace) {
-        return workspaceService.createWorkspace(workspace);
+    public WorkspaceDTO createWorkspace(WorkspaceDTO workspaceDTO) {
+        return workspaceService.createWorkspace(workspaceDTO);
     }
 
     @Override
-    public Workspace updateWorkspace(UUID workspaceId, Workspace workspace) {
-        return workspaceService.updateWorkspace(workspaceId, workspace);
+    public WorkspaceDTO updateWorkspace(UUID workspaceId, WorkspaceDTO workspaceDTO) {
+        return workspaceService.updateWorkspace(workspaceId, workspaceDTO);
     }
 
     @Override

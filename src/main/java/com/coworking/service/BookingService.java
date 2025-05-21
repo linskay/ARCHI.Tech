@@ -1,18 +1,18 @@
 package com.coworking.service;
 
-import com.coworking.model.Booking;
+import com.coworking.dto.BookingDTO;
 
 import java.util.List;
 import java.util.UUID;
 
 public interface BookingService {
-    Booking createBooking(Booking booking);
+    BookingDTO createBooking(BookingDTO bookingDTO);
 
-    Booking getBookingById(UUID bookingId);
+    BookingDTO getBookingById(UUID bookingId);
 
-    List<Booking> getAllBookings();
+    List<BookingDTO> getAllBookings();
 
-    Booking updateBooking(UUID bookingId, Booking booking);
+    BookingDTO updateBooking(UUID bookingId, BookingDTO bookingDTO);
 
     void deleteBooking(UUID bookingId);
 }
