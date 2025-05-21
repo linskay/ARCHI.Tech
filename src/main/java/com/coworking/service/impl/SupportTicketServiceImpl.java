@@ -1,10 +1,12 @@
 package com.coworking.service.impl;
 
 import com.coworking.exception.SupportTicketNotFoundException;
+import com.coworking.exception.UserNotFoundException;
 import com.coworking.model.SupportTicket;
 import com.coworking.model.User;
 import com.coworking.repository.SupportTicketRepository;
 import com.coworking.service.SupportTicketService;
+import com.coworking.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -17,6 +19,7 @@ import java.util.UUID;
 public class SupportTicketServiceImpl implements SupportTicketService {
 
     private final SupportTicketRepository supportTicketRepository;
+    private final UserRepository userRepository;
 
     @Override
     public List<SupportTicket> getAllSupportTickets() {
