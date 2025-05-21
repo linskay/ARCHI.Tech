@@ -12,6 +12,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -19,6 +20,7 @@ import java.util.UUID;
 
 @RestController
 @RequiredArgsConstructor
+@Validated
 @RequestMapping("/supply-orders")
 @Tag(name = "Заказы поставок", description = "API для управления заказами поставок")
 public class SupplyOrderController {
