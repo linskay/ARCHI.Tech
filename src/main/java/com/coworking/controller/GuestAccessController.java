@@ -10,6 +10,7 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -17,15 +18,12 @@ import java.util.List;
 import java.util.UUID;
 
 @RestController
+@RequiredArgsConstructor
 @RequestMapping("/guest-access")
 @Tag(name = "Гостевой доступ", description = "API для управления гостевым доступом")
 public class GuestAccessController {
 
     private final GuestAccessService guestAccessService;
-
-    public GuestAccessController(GuestAccessService guestAccessService) {
-        this.guestAccessService = guestAccessService;
-    }
 
     @Operation(summary = "Получить все запросы на гостевой доступ")
     @ApiResponses(value = {
