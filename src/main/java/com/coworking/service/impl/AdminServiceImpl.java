@@ -5,6 +5,7 @@ import com.coworking.dto.WorkspaceDTO;
 import com.coworking.model.SystemStatistics;
 import com.coworking.service.*;
 import org.springframework.stereotype.Service;
+
 import java.util.List;
 import java.util.UUID;
 
@@ -39,13 +40,13 @@ public class AdminServiceImpl implements AdminService {
     @Override
     public SystemStatistics getSystemStatistics() {
         SystemStatistics statistics = new SystemStatistics();
-        
+
         // TODO: Реализовать получение статистики из всех сервисов
         // Например:
         // statistics.setTotalUsers(userService.countAllUsers());
         // statistics.setActiveUsers(userService.countActiveUsers());
         // и т.д.
-        
+
         return statistics;
     }
 
