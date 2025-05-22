@@ -10,7 +10,6 @@ import java.util.UUID;
 @NoArgsConstructor
 @Data
 @Entity
-@Table(name = "parking_spaces")
 public class ParkingSpace {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)

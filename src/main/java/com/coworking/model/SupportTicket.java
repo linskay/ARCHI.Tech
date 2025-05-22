@@ -12,7 +12,6 @@ import java.util.UUID;
 @NoArgsConstructor
 @Data
 @Entity
-@Table(name = "support_tickets")
 public class SupportTicket {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)

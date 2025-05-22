@@ -12,7 +12,6 @@ import java.util.UUID;
 @NoArgsConstructor
 @Data
 @Entity
-@Table(name = "guest_access")
 public class GuestAccess {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
