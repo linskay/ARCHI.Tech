@@ -1,0 +1,21 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "properties": {
+    "parkingSpaceId": {
+      "type": "string",
+      "format": "uuid"
+    },
+    "location": {
+      "type": "string"
+    },
+    "status": {
+      "type": "string",
+      "enum": ["AVAILABLE", "OCCUPIED", "UNDER_MAINTENANCE"]
+    },
+    "pricePerHour": {
+      "type": "number"
+    }
+  },
+  "required": ["location", "status", "pricePerHour"]
+}

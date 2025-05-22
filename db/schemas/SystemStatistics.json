@@ -1,0 +1,64 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "properties": {
+    "totalUsers": {
+      "type": "integer"
+    },
+    "activeUsers": {
+      "type": "integer"
+    },
+    "totalWorkspaces": {
+      "type": "integer"
+    },
+    "availableWorkspaces": {
+      "type": "integer"
+    },
+    "totalBookings": {
+      "type": "integer"
+    },
+    "activeBookings": {
+      "type": "integer"
+    },
+    "totalGuestAccess": {
+      "type": "integer"
+    },
+    "activeGuestAccess": {
+      "type": "integer"
+    },
+    "totalParkingSpaces": {
+      "type": "integer"
+    },
+    "availableParkingSpaces": {
+      "type": "integer"
+    },
+    "totalSupplyOrders": {
+      "type": "integer"
+    },
+    "pendingSupplyOrders": {
+      "type": "integer"
+    },
+    "totalSupportTickets": {
+      "type": "integer"
+    },
+    "openSupportTickets": {
+      "type": "integer"
+    }
+  },
+  "required": [
+    "totalUsers",
+    "activeUsers",
+    "totalWorkspaces",
+    "availableWorkspaces",
+    "totalBookings",
+    "activeBookings",
+    "totalGuestAccess",
+    "activeGuestAccess",
+    "totalParkingSpaces",
+    "availableParkingSpaces",
+    "totalSupplyOrders",
+    "pendingSupplyOrders",
+    "totalSupportTickets",
+    "openSupportTickets"
+  ]
+}
