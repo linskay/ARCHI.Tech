@@ -27,7 +27,7 @@ public class GuestAccessController {
 
     private final GuestAccessService guestAccessService;
 
-    @Operation(summary = "Получить все запросы на гостевой доступ")
+    @Operation(summary = "Получить все запросы на гостевой доступ", description = "Возвращает список всех запросов на гостевой доступ")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Успешное получение списка",
                     content = @Content(schema = @Schema(implementation = GuestAccess.class))),
@@ -101,4 +101,4 @@ public class GuestAccessController {
         guestAccessService.deleteGuestAccess(guestAccessId);
         return ResponseEntity.noContent().build();
     }
-} 
+}

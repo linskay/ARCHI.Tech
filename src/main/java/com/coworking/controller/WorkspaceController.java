@@ -2,6 +2,9 @@ package com.coworking.controller;
 
 import com.coworking.dto.WorkspaceDTO;
 import com.coworking.service.WorkspaceService;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -12,12 +15,22 @@ import java.util.UUID;
 
 @RestController
 @RequestMapping("/workspaces")
-@RequiredArgsConstructor
+
 @Validated
 public class WorkspaceController {
 
     private final WorkspaceService workspaceService;
 
+    public WorkspaceController(WorkspaceService workspaceService) {
+        this.workspaceService = workspaceService;
+    }
+
+    @Operation(summary = "Получить все рабочие пространства", description = "Возвращает список всех рабочих пространств")
+    @ApiResponses(value = {
+        @ApiResponse(responseCode = "200", description = "Список рабочих пространств успешно получен"),
+        @ApiResponse(responseCode = "401", description = "Неавторизованный доступ"),
+        @ApiResponse(responseCode = "500", description = "Внутренняя ошибка сервера")
+    })
     @GetMapping
     public ResponseEntity<List<WorkspaceDTO>> getAllWorkspaces() {
         return ResponseEntity.ok(workspaceService.getAllWorkspaces());
@@ -43,4 +56,4 @@ public class WorkspaceController {
         workspaceService.deleteWorkspace(workspaceId);
         return ResponseEntity.noContent().build();
     }
-} 
+}

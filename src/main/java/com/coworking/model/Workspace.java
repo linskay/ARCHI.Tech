@@ -1,5 +1,6 @@
 package com.coworking.model;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -7,6 +8,7 @@ import lombok.NoArgsConstructor;
 
 import java.util.UUID;
 
+@Schema(description = "Модель рабочего пространства")
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
@@ -14,12 +16,13 @@ import java.util.UUID;
 public class Workspace {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
-    private UUID workspaceId;
-    
-    @Column(nullable = false, length = 100)
+    @Schema(description = "Идентификатор рабочего пространства", example = "550e8400-e29b-41d4-a716-446655440")
+    private UUID id;
+
+    @Schema(description = "Название рабочего пространства", example = "Мое рабочее пространство")
     private String name;
-    
-    @Column
+
+    @Schema(description = "Описание рабочего пространства", example = "Описание рабочего пространства")
     private String description;
     
     @Column(nullable = false)

@@ -28,7 +28,7 @@ public class AdminController {
         this.adminService = adminService;
     }
 
-    @Operation(summary = "Получить статистику системы")
+    @Operation(summary = "Получить статистику системы", description = "Возвращает статистику системы, включая количество пользователей, рабочих пространств и бронирований.")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Статистика успешно получена"),
             @ApiResponse(responseCode = "401", description = "Неавторизованный доступ"),
@@ -181,4 +181,4 @@ public class AdminController {
         adminService.deleteWorkspace(workspaceId);
         return ResponseEntity.noContent().build();
     }
-} 
+}
