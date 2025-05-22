@@ -1,0 +1,31 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "properties": {
+    "userId": {
+      "type": "string",
+      "format": "uuid"
+    },
+    "firstName": {
+      "type": "string"
+    },
+    "lastName": {
+      "type": "string"
+    },
+    "email": {
+      "type": "string",
+      "format": "email"
+    },
+    "password": {
+      "type": "string"
+    },
+    "phoneNumber": {
+      "type": "string"
+    },
+    "role": {
+      "type": "string",
+      "enum": ["USER", "ADMIN"]
+    }
+  },
+  "required": ["firstName", "lastName", "email", "password", "phoneNumber", "role"]
+}

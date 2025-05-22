@@ -1,0 +1,38 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "properties": {
+    "ticketId": {
+      "type": "string",
+      "format": "uuid"
+    },
+    "user": {
+      "$ref": "#/definitions/User"
+    },
+    "issue": {
+      "type": "string"
+    },
+    "status": {
+      "type": "string",
+      "enum": ["OPEN", "IN_PROGRESS", "CLOSED"]
+    }
+  },
+  "required": ["user", "issue", "status"],
+  "definitions": {
+    "User": {
+      "type": "object",
+      "properties": {
+        "userId": {
+          "type": "string",
+          "format": "uuid"
+        },
+        "firstName": {
+          "type": "string"
+        },
+        "lastName": {
+          "type": "string"
+        }
+      }
+    }
+  }
+}

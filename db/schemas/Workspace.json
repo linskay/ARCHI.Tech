@@ -1,0 +1,24 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "properties": {
+    "workspaceId": {
+      "type": "string",
+      "format": "uuid"
+    },
+    "name": {
+      "type": "string"
+    },
+    "description": {
+      "type": "string"
+    },
+    "pricePerHour": {
+      "type": "number"
+    },
+    "status": {
+      "type": "string",
+      "enum": ["AVAILABLE", "OCCUPIED", "UNDER_MAINTENANCE"]
+    }
+  },
+  "required": ["name", "description", "pricePerHour", "status"]
+}
