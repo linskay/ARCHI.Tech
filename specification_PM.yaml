@@ -12,6 +12,46 @@ servers:
 
 components:
   schemas:
+    UserRole:
+      type: string
+      description: User's role in the system.
+      enum: [ USER, ADMIN ]
+
+    WorkspaceStatus:
+      type: string
+      description: Status of a workspace.
+      enum: [ AVAILABLE, OCCUPIED, UNDER_MAINTENANCE ]
+
+    BookingStatus:
+      type: string
+      description: Status of a booking.
+      enum: [ PENDING, CONFIRMED, CANCELED, COMPLETED ]
+
+    GuestAccessStatus:
+      type: string
+      description: Status of guest access.
+      enum: [ PENDING, APPROVED, REJECTED, ACTIVE, EXPIRED ]
+
+    ParkingStatus:
+      type: string
+      description: Status of a parking space.
+      enum: [ AVAILABLE, OCCUPIED, RESERVED ]
+
+    SupplyOrderStatus:
+      type: string
+      description: Status of a supply order.
+      enum: [ PENDING, PROCESSING, SHIPPED, DELIVERED, CANCELED ]
+
+    TicketPriority:
+      type: string
+      description: Priority of a support ticket.
+      enum: [ LOW, MEDIUM, HIGH ]
+
+    TicketStatus:
+      type: string
+      description: Status of a support ticket.
+      enum: [ OPEN, IN_PROGRESS, RESOLVED, CLOSED ]
+
     User:
       type: object
       properties:
@@ -37,9 +77,7 @@ components:
           description: User's phone number.
           maxLength: 20
         role:
-          type: string
-          enum: [USER, ADMIN]
-          description: User's role.
+          $ref: '#/components/schemas/UserRole'
       required:
         - firstName
         - lastName
@@ -67,9 +105,7 @@ components:
           format: float
           description: Price per hour of the workspace.
         status:
-          type: string
-          enum: [AVAILABLE, OCCUPIED, UNDER_MAINTENANCE]
-          description: Workspace status.
+          $ref: '#/components/schemas/WorkspaceStatus'
       required:
         - name
         - pricePerHour
@@ -105,9 +141,7 @@ components:
           description: Total price of the booking.
           readOnly: true
         status:
-          type: string
-          enum: [PENDING, CONFIRMED, CANCELED, COMPLETED]
-          description: Booking status.
+          $ref: '#/components/schemas/BookingStatus'
       required:
         - workspaceId
         - userId
@@ -143,9 +177,7 @@ components:
           format: date-time
           description: Access end time.
         status:
-          type: string
-          enum: [PENDING, APPROVED, REJECTED, ACTIVE, EXPIRED]
-          description: Guest access status.
+          $ref: '#/components/schemas/GuestAccessStatus'
       required:
         - userId
         - guestName
@@ -166,9 +198,7 @@ components:
           description: Parking space number.
           maxLength: 10
         status:
-          type: string
-          enum: [AVAILABLE, OCCUPIED, RESERVED]
-          description: Parking space status.
+          $ref: '#/components/schemas/ParkingSpaceStatus'
         pricePerDay:
           type: number
           format: float
@@ -200,9 +230,7 @@ components:
           format: date-time
           description: Order date and time.
         status:
-          type: string
-          enum: [PENDING, PROCESSING, SHIPPED, DELIVERED, CANCELED]
-          description: Order status.
+          $ref: '#/components/schemas/SupplyOrderStatus'
       required:
         - userId
         - items
@@ -227,13 +255,9 @@ components:
           type: string
           description: Ticket description.
         priority:
-          type: string
-          enum: [LOW, MEDIUM, HIGH]
-          description: Ticket priority.
+          $ref: '#/components/schemas/TicketPriority'
         status:
-          type: string
-          enum: [OPEN, IN_PROGRESS, RESOLVED, CLOSED]
-          description: Ticket status.
+          $ref: '#/components/schemas/TicketStatus'
         creationDate:
           type: string
           format: date-time

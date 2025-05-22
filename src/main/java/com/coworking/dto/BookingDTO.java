@@ -9,6 +9,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
@@ -36,7 +37,7 @@ public class BookingDTO {
 
     @NotNull(message = "Общая стоимость обязательна")
     @DecimalMin(value = "0.0", inclusive = false, message = "Общая стоимость должна быть больше 0")
-    private Double totalPrice;
+    private BigDecimal totalPrice;
 
     @NotNull(message = "Статус обязателен")
     private Booking.BookingStatus status;

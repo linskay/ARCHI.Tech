@@ -6,6 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.math.BigDecimal;
 import java.util.UUID;
 
 @Schema(description = "Модель рабочего пространства")
@@ -13,23 +14,28 @@ import java.util.UUID;
 @NoArgsConstructor
 @Data
 @Entity
+@Table (name = "workspaces")
 public class Workspace {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     @Schema(description = "Идентификатор рабочего пространства", example = "550e8400-e29b-41d4-a716-446655440")
-    private UUID id;
-
+    @Column(name = "workspace_id")
+    private UUID workspaceId;
+    
     @Schema(description = "Название рабочего пространства", example = "Мое рабочее пространство")
+    @Column(name = "name", nullable = false, length = 100)
     private String name;
-
+    
     @Schema(description = "Описание рабочего пространства", example = "Описание рабочего пространства")
+    @Column (name = "description", columnDefinition = "TEXT")
+
     private String description;
     
-    @Column(nullable = false)
-    private Double pricePerHour;
+    @Column(name = "price_per_hour", nullable = false, precision = 10, scale = 2)
+    private BigDecimal pricePerHour;
     
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false)
+    @Column(name = "status", nullable = false, length = 20)
     private WorkspaceStatus status;
     
     public enum WorkspaceStatus {
