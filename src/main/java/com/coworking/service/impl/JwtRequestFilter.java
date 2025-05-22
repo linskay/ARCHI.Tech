@@ -1,14 +1,15 @@
 package com.coworking.service.impl;
 
 import com.coworking.repository.UserRepository;
+import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
-import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
+import io.jsonwebtoken.SignatureException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -18,47 +19,91 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
+import java.util.List;
 
+@Slf4j
 @Component
 public class JwtRequestFilter extends OncePerRequestFilter {
 
-    @Autowired
-    private UserDetailsService userDetailsService;
+    private static final List<String> EXCLUDED_PATHS = List.of(
+            "/swagger-ui/",
+            "/v3/api-docs",
+            "/api-docs",
+            "/swagger-resources",
+            "/webjars/",
+            "/auth/"
+    );
 
-    @Autowired
-    private UserRepository userRepository;
+    private final UserDetailsService userDetailsService;
+    private final UserRepository userRepository;
+    private final String SECRET_KEY = "your_strong_secret_key_here_123!";
 
-    private final String SECRET_KEY = "your_secret_key"; // Замените на ваш секретный ключ
+    public JwtRequestFilter(UserDetailsService userDetailsService,
+                            UserRepository userRepository) {
+        this.userDetailsService = userDetailsService;
+        this.userRepository = userRepository;
+    }
 
     @Override
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain chain)
+    protected void doFilterInternal(HttpServletRequest request,
+                                    HttpServletResponse response,
+                                    FilterChain chain)
             throws ServletException, IOException {
-        final String authorizationHeader = request.getHeader("Authorization");
 
+        final String requestURI = request.getRequestURI();
+
+        // Пропускаем Swagger и публичные эндпоинты
+        if (isExcludedPath(requestURI)) {
+            chain.doFilter(request, response);
+            return;
+        }
+
+        final String authHeader = request.getHeader("Authorization");
         String username = null;
         String jwt = null;
 
-        if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
-            jwt = authorizationHeader.substring(7);
+        if (authHeader != null && authHeader.startsWith("Bearer ")) {
+            jwt = authHeader.substring(7);
             try {
-                username = Jwts.parser().setSigningKey(SECRET_KEY).parseClaimsJws(jwt).getBody().getSubject();
-            } catch (ExpiredJwtException e) {
-                System.out.println("JWT token expired");
-            } catch (JwtException e) {
-                System.out.println("Invalid JWT token");
+                Claims claims = Jwts.parser()
+                        .setSigningKey(SECRET_KEY.getBytes())
+                        .parseClaimsJws(jwt)
+                        .getBody();
+
+                username = claims.getSubject();
+                log.debug("JWT token validated for user: {}", username);
+
+            } catch (ExpiredJwtException ex) {
+                log.warn("JWT token expired: {}", ex.getMessage());
+            } catch (SignatureException ex) {
+                log.error("Invalid JWT signature: {}", ex.getMessage());
+            } catch (Exception ex) {
+                log.error("JWT processing error: {}", ex.getMessage());
             }
         }
 
         if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
             UserDetails userDetails = userDetailsService.loadUserByUsername(username);
-            if (userDetails != null) {
-                // Установите аутентификацию в контексте безопасности
-                UsernamePasswordAuthenticationToken token = new UsernamePasswordAuthenticationToken(
-                        userDetails, null, userDetails.getAuthorities());
-                token.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-                SecurityContextHolder.getContext().setAuthentication(token);
+
+            if (userDetails != null && userRepository.existsByEmail(username)) {
+                UsernamePasswordAuthenticationToken authToken =
+                        new UsernamePasswordAuthenticationToken(
+                                userDetails,
+                                null,
+                                userDetails.getAuthorities());
+
+                authToken.setDetails(
+                        new WebAuthenticationDetailsSource().buildDetails(request));
+
+                SecurityContextHolder.getContext().setAuthentication(authToken);
+                log.debug("Authenticated user: {}", username);
             }
         }
+
         chain.doFilter(request, response);
+    }
+
+    private boolean isExcludedPath(String requestURI) {
+        return EXCLUDED_PATHS.stream().anyMatch(requestURI::contains);
     }
 }
