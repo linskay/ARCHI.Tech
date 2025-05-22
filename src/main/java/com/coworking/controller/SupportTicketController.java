@@ -27,7 +27,7 @@ public class SupportTicketController {
 
     private final SupportTicketService supportTicketService;
 
-    @Operation(summary = "Получить все тикеты поддержки")
+    @Operation(summary = "Получить все тикеты поддержки", description = "Возвращает список всех тикетов поддержки")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Успешное получение списка",
                     content = @Content(schema = @Schema(implementation = SupportTicket.class))),
@@ -101,4 +101,4 @@ public class SupportTicketController {
         supportTicketService.deleteSupportTicket(ticketId);
         return ResponseEntity.noContent().build();
     }
-} 
+}

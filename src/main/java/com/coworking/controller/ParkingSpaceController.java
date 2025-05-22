@@ -27,7 +27,7 @@ public class ParkingSpaceController {
 
     private final ParkingSpaceService parkingSpaceService;
 
-    @Operation(summary = "Получить все парковочные места")
+    @Operation(summary = "Получить все парковочные места", description = "Возвращает список всех парковочных мест")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Успешное получение списка",
                     content = @Content(schema = @Schema(implementation = ParkingSpace.class))),
@@ -101,4 +101,4 @@ public class ParkingSpaceController {
         parkingSpaceService.deleteParkingSpace(parkingSpaceId);
         return ResponseEntity.noContent().build();
     }
-} 
+}

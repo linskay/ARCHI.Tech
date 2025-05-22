@@ -27,7 +27,7 @@ public class SupplyOrderController {
 
     private final SupplyOrderService supplyOrderService;
 
-    @Operation(summary = "Получить все заказы поставок")
+    @Operation(summary = "Получить все заказы поставок", description = "Возвращает список всех заказов поставок")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Успешное получение списка",
                     content = @Content(schema = @Schema(implementation = SupplyOrder.class))),
@@ -101,4 +101,4 @@ public class SupplyOrderController {
         supplyOrderService.deleteSupplyOrder(orderId);
         return ResponseEntity.noContent().build();
     }
-} 
+}

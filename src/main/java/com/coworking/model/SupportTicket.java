@@ -35,22 +35,23 @@ public class SupportTicket {
     
     @Column(name = "description", nullable = false, columnDefinition = "TEXT")
     private String description;
-    
+
     @Enumerated(EnumType.STRING)
     @Column(name = "priority", nullable = false, length = 10)
     private TicketPriority priority;
-    
+
     @Enumerated(EnumType.STRING)
     @Column(name = "status", nullable = false, length = 20)
     private TicketStatus status;
+
     
     @Column(name = "creation_date", nullable = false)
     private LocalDateTime creationDate;
-    
+
     public enum TicketPriority {
         LOW, MEDIUM, HIGH
     }
-    
+
     public enum TicketStatus {
         OPEN, IN_PROGRESS, RESOLVED, CLOSED
     }

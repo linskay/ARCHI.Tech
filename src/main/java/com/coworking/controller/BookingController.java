@@ -23,7 +23,7 @@ public class BookingController {
 
     private final BookingService bookingService;
 
-    @Operation(summary = "Получить все бронирования")
+    @Operation(summary = "Получить все бронирования", description = "Возвращает список всех бронирований")
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Успешное получение списка",
                     content = @Content(schema = @Schema(implementation = Booking.class))),
@@ -82,4 +82,4 @@ public class BookingController {
         bookingService.deleteBooking(bookingId);
         return ResponseEntity.noContent().build();
     }
-} 
+}
