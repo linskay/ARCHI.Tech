@@ -43,6 +43,10 @@ databaseChangeLog:
                   type: varchar(10)
                   constraints:
                     nullable: false
+            addCheckConstraint:
+              constraintName: chk_user_role
+              columnName: role
+              checkConstraint: "role IN ('USER', 'ADMIN')"
 
         - createTable:
             tableName: workspaces
@@ -71,6 +75,10 @@ databaseChangeLog:
                   type: varchar(20)
                   constraints:
                     nullable: false
+            addCheckConstraint:
+                constraintName: chk_workspace_status
+                columnName: status
+                checkConstraint: "status IN ('AVAILABLE', 'OCCUPIED', 'UNDER_MAINTENANCE')"
 
         - createTable:
             tableName: bookings
@@ -115,6 +123,10 @@ databaseChangeLog:
                   type: varchar(20)
                   constraints:
                     nullable: false
+            addCheckConstraint:
+              constraintName: chk_booking_status
+              columnName: status
+              checkConstraint: "status IN ('PENDING', 'CONFIRMED', 'CANCELED', 'COMPLETED')"
 
         - createTable:
             tableName: guest_access
@@ -157,6 +169,10 @@ databaseChangeLog:
                   type: varchar(20)
                   constraints:
                     nullable: false
+            addCheckConstraint:
+              constraintName: chk_guest_access_status
+              columnName: status
+              checkConstraint: "status IN ('PENDING', 'APPROVED', 'REJECTED', 'ACTIVE', 'EXPIRED')"
 
         - createTable:
             tableName: parking_spaces
@@ -183,6 +199,10 @@ databaseChangeLog:
                   type: decimal(10,2)
                   constraints:
                     nullable: false
+            addCheckConstraint:
+              constraintName: chk_parking_space_status
+              columnName: status
+              checkConstraint: "status IN ('AVAILABLE', 'OCCUPIED', 'RESERVED')"
 
         - createTable:
             tableName: supply_orders
@@ -215,6 +235,10 @@ databaseChangeLog:
                   type: varchar(20)
                   constraints:
                     nullable: false
+            addCheckConstraint:
+              constraintName: chk_supply_order_status
+              columnName: status
+              checkConstraint: "status IN ('PENDING', 'PROCESSING', 'SHIPPED', 'DELIVERED', 'CANCELED')"
 
         - createTable:
             tableName: support_tickets
@@ -256,4 +280,11 @@ databaseChangeLog:
                   name: creation_date
                   type: timestamp
                   constraints:
-                    nullable: false 
+                    nullable: false
+            addCheckConstraint:
+              - constraintName: chk_support_ticket_priority
+                columnName: priority
+                checkConstraint: "priority IN ('LOW', 'MEDIUM', 'HIGH')"
+              - constraintName: chk_support_ticket_status
+                columnName: status
+                checkConstraint: "status IN ('OPEN', 'IN_PROGRESS', 'RESOLVED', 'CLOSED')"

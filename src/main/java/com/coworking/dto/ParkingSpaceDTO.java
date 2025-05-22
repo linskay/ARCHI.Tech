@@ -10,6 +10,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.math.BigDecimal;
 import java.util.UUID;
 
 @Getter
@@ -26,7 +27,7 @@ public class ParkingSpaceDTO {
 
     @NotNull(message = "Цена за день обязательна")
     @DecimalMin(value = "0.0", inclusive = false, message = "Цена за день должна быть больше 0")
-    private Double pricePerDay;
+    private BigDecimal pricePerDay;
 
     @NotNull(message = "Статус парковочного места обязателен")
     private ParkingSpace.ParkingSpaceStatus status;
