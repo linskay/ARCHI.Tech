@@ -10,6 +10,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.math.BigDecimal;
 import java.util.UUID;
 
 @Getter
@@ -28,7 +29,7 @@ public class WorkspaceDTO {
 
     @NotNull(message = "Цена за час обязательна")
     @DecimalMin(value = "0.0", inclusive = false, message = "Цена за час должна быть больше 0")
-    private Double pricePerHour;
+    private BigDecimal pricePerHour;
 
     @NotNull(message = "Статус рабочего пространства обязателен")
     private Workspace.WorkspaceStatus status;
