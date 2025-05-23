@@ -154,6 +154,23 @@
                     </excludes>
                 </configuration>
             </plugin>
+            <plugin>
+                <groupId>org.springdoc</groupId>
+                <artifactId>springdoc-openapi-maven-plugin</artifactId>
+                <version>2.3.0</version>
+                <executions>
+                    <execution>
+                        <id>integration-test</id>
+                        <goals>
+                            <goal>generate</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <outputFileName>openapi.yaml</outputFileName>
+                    <outputDir>${project.basedir}</outputDir>
+                </configuration>
+            </plugin>
         </plugins>
     </build>
 

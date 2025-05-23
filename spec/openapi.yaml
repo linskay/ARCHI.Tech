@@ -1,0 +1,55 @@
+---
+openapi: "3.0.1"
+info:
+  title: "Coworking Space Management API"
+  description: "API для управления коворкинг-пространством"
+  termsOfService: null
+  contact:
+    name: "Support Team"
+    url: null
+    email: "support@coworkingspace.com"
+    extensions: null
+  license:
+    name: "Apache 2.0"
+    url: "http://www.apache.org/licenses/LICENSE-2.0.html"
+    identifier: null
+    extensions: null
+  version: "1.0.0"
+  extensions: null
+  summary: null
+externalDocs: null
+servers:
+- url: "http://localhost:8080"
+  description: "Локальный сервер разработки"
+  variables: null
+  extensions: null
+security:
+- bearerAuth: []
+tags: null
+paths: null
+components:
+  schemas: null
+  responses: null
+  parameters: null
+  examples: null
+  requestBodies: null
+  headers: null
+  securitySchemes:
+    bearerAuth:
+      type: "HTTP"
+      description: "JWT токен авторизации"
+      name: null
+      $ref: null
+      in: null
+      scheme: "bearer"
+      bearerFormat: "JWT"
+      flows: null
+      openIdConnectUrl: null
+      extensions: null
+  links: null
+  callbacks: null
+  extensions: null
+  pathItems: null
+extensions: null
+jsonSchemaDialect: null
+webhooks: null
