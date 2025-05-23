@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="400" height="300" viewBox="0 0 400 300" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background Elements -->
+  <circle cx="200" cy="150" r="120" fill="#FFFFFF" fill-opacity="0.1"/>
+  <circle cx="200" cy="150" r="100" fill="#FFFFFF" fill-opacity="0.15"/>
+  
+  <!-- Chat Bubbles -->
+  <path d="M100 120C100 120 120 100 150 100C180 100 200 120 200 120V140H180L160 160L140 140H100V120Z" fill="#FFFFFF" fill-opacity="0.9"/>
+  <path d="M300 180C300 180 280 200 250 200C220 200 200 180 200 180V160H220L240 140L260 160H300V180Z" fill="#FFFFFF" fill-opacity="0.9"/>
+  
+  <!-- Connection Lines -->
+  <path d="M200 140L200 160" stroke="#FFFFFF" stroke-width="2" stroke-dasharray="4 4"/>
+  <path d="M160 160L240 140" stroke="#FFFFFF" stroke-width="2" stroke-dasharray="4 4"/>
+  
+  <!-- Users -->
+  <circle cx="120" cy="80" r="15" fill="#FFFFFF" fill-opacity="0.9"/>
+  <circle cx="280" cy="220" r="15" fill="#FFFFFF" fill-opacity="0.9"/>
+  
+  <!-- User Icons -->
+  <path d="M110 70L130 70" stroke="#FFFFFF" stroke-width="2"/>
+  <path d="M270 210L290 210" stroke="#FFFFFF" stroke-width="2"/>
+  
+  <!-- Shared Document -->
+  <rect x="180" y="140" width="40" height="20" fill="#FFFFFF" fill-opacity="0.7"/>
+  <line x1="180" y1="145" x2="220" y2="145" stroke="#FFFFFF" stroke-width="1"/>
+  <line x1="180" y1="150" x2="220" y2="150" stroke="#FFFFFF" stroke-width="1"/>
+  <line x1="180" y1="155" x2="220" y2="155" stroke="#FFFFFF" stroke-width="1"/>
+  
+  <!-- Decorative Elements -->
+  <circle cx="80" cy="80" r="5" fill="#FFFFFF" fill-opacity="0.5"/>
+  <circle cx="320" cy="220" r="5" fill="#FFFFFF" fill-opacity="0.5"/>
+  <circle cx="200" cy="100" r="5" fill="#FFFFFF" fill-opacity="0.5"/>
+  <circle cx="200" cy="200" r="5" fill="#FFFFFF" fill-opacity="0.5"/>
+</svg> 

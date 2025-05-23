@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="400" height="300" viewBox="0 0 400 300" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background Elements -->
+  <circle cx="200" cy="150" r="120" fill="#FFFFFF" fill-opacity="0.1"/>
+  <circle cx="200" cy="150" r="100" fill="#FFFFFF" fill-opacity="0.15"/>
+  
+  <!-- Rocket -->
+  <path d="M200 80L220 120L180 120Z" fill="#FFFFFF" fill-opacity="0.9"/>
+  <rect x="190" y="120" width="20" height="40" fill="#FFFFFF" fill-opacity="0.9"/>
+  <path d="M180 160L220 160L200 200Z" fill="#FFFFFF" fill-opacity="0.9"/>
+  
+  <!-- Rocket Windows -->
+  <circle cx="200" cy="110" r="5" fill="#FFFFFF" fill-opacity="0.7"/>
+  <circle cx="200" cy="130" r="5" fill="#FFFFFF" fill-opacity="0.7"/>
+  
+  <!-- Rocket Fins -->
+  <path d="M190 120L170 140L190 140Z" fill="#FFFFFF" fill-opacity="0.9"/>
+  <path d="M210 120L230 140L210 140Z" fill="#FFFFFF" fill-opacity="0.9"/>
+  
+  <!-- Stars -->
+  <circle cx="100" cy="80" r="2" fill="#FFFFFF" fill-opacity="0.8"/>
+  <circle cx="300" cy="80" r="2" fill="#FFFFFF" fill-opacity="0.8"/>
+  <circle cx="80" cy="120" r="2" fill="#FFFFFF" fill-opacity="0.8"/>
+  <circle cx="320" cy="120" r="2" fill="#FFFFFF" fill-opacity="0.8"/>
+  <circle cx="120" cy="200" r="2" fill="#FFFFFF" fill-opacity="0.8"/>
+  <circle cx="280" cy="200" r="2" fill="#FFFFFF" fill-opacity="0.8"/>
+  <circle cx="160" cy="220" r="2" fill="#FFFFFF" fill-opacity="0.8"/>
+  <circle cx="240" cy="220" r="2" fill="#FFFFFF" fill-opacity="0.8"/>
+  
+  <!-- Decorative Lines -->
+  <path d="M200 80L200 60" stroke="#FFFFFF" stroke-width="2" stroke-dasharray="4 4"/>
+  <path d="M200 200L200 220" stroke="#FFFFFF" stroke-width="2" stroke-dasharray="4 4"/>
+  <path d="M180 120L160 120" stroke="#FFFFFF" stroke-width="2" stroke-dasharray="4 4"/>
+  <path d="M220 120L240 120" stroke="#FFFFFF" stroke-width="2" stroke-dasharray="4 4"/>
+  
+  <!-- Sparkles -->
+  <path d="M180 80L190 70L200 80L190 90Z" fill="#FFFFFF" fill-opacity="0.6"/>
+  <path d="M220 80L230 70L240 80L230 90Z" fill="#FFFFFF" fill-opacity="0.6"/>
+  <path d="M180 160L190 150L200 160L190 170Z" fill="#FFFFFF" fill-opacity="0.6"/>
+  <path d="M220 160L230 150L240 160L230 170Z" fill="#FFFFFF" fill-opacity="0.6"/>
+</svg> 

@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="400" height="300" viewBox="0 0 400 300" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background Elements -->
+  <circle cx="200" cy="150" r="120" fill="#FFFFFF" fill-opacity="0.1"/>
+  <circle cx="200" cy="150" r="100" fill="#FFFFFF" fill-opacity="0.15"/>
+  
+  <!-- Graph Background -->
+  <rect x="100" y="80" width="200" height="140" rx="8" fill="#FFFFFF" fill-opacity="0.9"/>
+  
+  <!-- Graph Lines -->
+  <path d="M120 200L160 180L200 190L240 160L280 170" stroke="#FFFFFF" stroke-width="3" fill="none"/>
+  
+  <!-- Graph Points -->
+  <circle cx="120" cy="200" r="4" fill="#FFFFFF"/>
+  <circle cx="160" cy="180" r="4" fill="#FFFFFF"/>
+  <circle cx="200" cy="190" r="4" fill="#FFFFFF"/>
+  <circle cx="240" cy="160" r="4" fill="#FFFFFF"/>
+  <circle cx="280" cy="170" r="4" fill="#FFFFFF"/>
+  
+  <!-- Bar Chart -->
+  <rect x="120" y="180" width="20" height="40" fill="#FFFFFF" fill-opacity="0.7"/>
+  <rect x="160" y="160" width="20" height="60" fill="#FFFFFF" fill-opacity="0.7"/>
+  <rect x="200" y="170" width="20" height="50" fill="#FFFFFF" fill-opacity="0.7"/>
+  <rect x="240" y="150" width="20" height="70" fill="#FFFFFF" fill-opacity="0.7"/>
+  <rect x="280" y="160" width="20" height="60" fill="#FFFFFF" fill-opacity="0.7"/>
+  
+  <!-- Grid Lines -->
+  <line x1="100" y1="100" x2="300" y2="100" stroke="#FFFFFF" stroke-width="1" stroke-opacity="0.3"/>
+  <line x1="100" y1="140" x2="300" y2="140" stroke="#FFFFFF" stroke-width="1" stroke-opacity="0.3"/>
+  <line x1="100" y1="180" x2="300" y2="180" stroke="#FFFFFF" stroke-width="1" stroke-opacity="0.3"/>
+  
+  <!-- Stats Icons -->
+  <circle cx="320" cy="100" r="20" fill="#FFFFFF" fill-opacity="0.9"/>
+  <path d="M310 100L320 90L330 100" stroke="#FFFFFF" stroke-width="2"/>
+  <path d="M320 90V110" stroke="#FFFFFF" stroke-width="2"/>
+  
+  <circle cx="320" cy="160" r="20" fill="#FFFFFF" fill-opacity="0.9"/>
+  <path d="M310 160L330 160" stroke="#FFFFFF" stroke-width="2"/>
+  <path d="M320 150V170" stroke="#FFFFFF" stroke-width="2"/>
+  
+  <!-- Decorative Elements -->
+  <circle cx="80" cy="80" r="5" fill="#FFFFFF" fill-opacity="0.5"/>
+  <circle cx="320" cy="220" r="5" fill="#FFFFFF" fill-opacity="0.5"/>
+</svg> 

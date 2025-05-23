@@ -20,6 +20,7 @@ const Navigation: React.FC = () => {
 
   const handleLogout = () => {
     localStorage.removeItem('isAuthenticated');
+    localStorage.removeItem('user');
     navigate('/login');
   };
 
@@ -46,7 +47,16 @@ const Navigation: React.FC = () => {
           <Button sx={navButtonStyle} component={RouterLink} to="/profile">
             Профиль
           </Button>
-          <Button sx={navButtonStyle} onClick={handleLogout}>
+          <Button 
+            sx={{
+              ...navButtonStyle,
+              background: 'linear-gradient(90deg, #ff4b2b 0%, #ff416c 100%)',
+              '&:hover': {
+                background: 'linear-gradient(90deg, #ff416c 0%, #ff4b2b 100%)',
+              },
+            }} 
+            onClick={handleLogout}
+          >
             Выйти
           </Button>
         </Box>
