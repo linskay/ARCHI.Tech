@@ -12,7 +12,7 @@ import com.coworking.repository.BookingRepository;
 import com.coworking.repository.UserRepository;
 import com.coworking.repository.WorkspaceRepository;
 import com.coworking.service.BookingService;
-import lombok.RequiredArgsConstructor;
+import lombok.*;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
